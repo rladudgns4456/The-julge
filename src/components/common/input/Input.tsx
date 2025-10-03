@@ -44,8 +44,9 @@ export default function Input({
           value={value}
           placeholder={placeholder}
           onChange={onChange}
-          className={`w-full rounded-lg px-3 py-2 text-body-1-regular bg-white placeholder-gray-40 focus:outline-none focus:ring-2
+          className={`w-full rounded-lg py-2 text-body-1-regular bg-white placeholder-gray-40 focus:outline-none focus:ring-2
             ${error ? "border border-red-40 focus:ring-red-30 bg-red-10" : "border border-gray-30 focus:ring-blue-20"}
+            ${unit ? "pl-3 pr-7" : "px-3"}
             ${
               type === "number"
                 ? "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
