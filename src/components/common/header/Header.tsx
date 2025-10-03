@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Search from "@/components/common/gnb/Search";
-import GuestMenu from "@/components/common/gnb/GuestMenu";
+import CommonGnb from "../gnb/CommonGnb";
 
 export default function Header() {
   return (
@@ -11,7 +11,7 @@ export default function Header() {
           <Image src="/logo.svg" width={112} height={40} alt="더 줄게 로고" />
         </Link>
         <Search />
-        <GuestMenu />
+        <CommonGnb />
       </div>
     </header>
   );
