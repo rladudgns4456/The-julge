@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "outlined" | "blue";
+  variant?: "primary" | "outlined" | "blue" | "gray";
   size?: "large" | "medium" | "small";
   children: React.ReactNode;
 }
@@ -10,7 +10,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
  * THE-JULGE 프로젝트 공용 직사각형 버튼 컴포넌트
  *
  * @param {Object} props - Button 컴포넌트 props
- * @param {"primary"|"outlined"|"blue"} [props.variant="primary"] - 버튼 스타일 지정 (primary: 빨간색? solid, outlined: 빨간색 테두리, blue: 파란색 테두리)
+ * @param {"primary"|"outlined"|"blue"|"gray"} [props.variant="primary"] - 버튼 스타일 지정 (primary: 빨간색? solid, outlined: 빨간색 테두리, blue: 파란색 테두리, gray: 회색 테두리)
  * @param {"large"|"medium"|"small"} [props.size="large"] - 버튼 높이 지정, 너비는 부모에서 제어 (large: 48px, medium: PC 48px/Mobile 37px, small: 37px)
  * @param {string} [props.className=""] - 기존 className 전달 또는 새로 추가할 className (너비 제어 등)
  * @param {React.ReactNode} props.children - 버튼 내용(텍스트)
@@ -41,6 +41,7 @@ const Button: React.FC<ButtonProps> = ({
     primary: "bg-primary-20 text-white hover:bg-primary-10 focus:ring-primary-20",
     outlined: "bg-white text-primary-20 border border-primary-20 hover:bg-red-10 focus:ring-primary-20",
     blue: "bg-white text-blue-20 border border-blue-20 hover:bg-blue-10 focus:ring-blue-20",
+    gray: "bg-white text-gray-50 border border-gray-30 hover:border-gray-40 focus:ring-gray-30",
   };
 
   const finalClasses = [BASE_STYLES, SIZE_STYLES[size], VARIANT_STYLES[variant], className].filter(Boolean).join(" ");
