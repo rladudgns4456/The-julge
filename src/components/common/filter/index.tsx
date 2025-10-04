@@ -9,7 +9,6 @@ import { REGION_OPTIONS } from "@/constants/options";
 import { useFilter } from "@/hooks/useFilter";
 import { FilterOptions, DetailFilterProps } from "@/types/filter";
 import { formatDateToString } from "@/utils/date";
-
 import "react-datepicker/dist/react-datepicker.css";
 
 // 필터 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
@@ -40,7 +39,6 @@ export type { FilterOptions, DetailFilterProps };
 const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, onReset, initialFilters = {} }) => {
   const { filters, handleFilterChange, handleLocationToggle, resetFilters } = useFilter(initialFilters);
 
-  // 적용 버튼 클릭
   const handleApply = () => {
     // API 전송을 위해 Date를 string으로 변환
     const apiFilters = {
@@ -51,7 +49,6 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
     onClose();
   };
 
-  // 초기화 버튼 클릭
   const handleReset = () => {
     resetFilters();
     onReset();
@@ -138,6 +135,7 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
                 className="w-full h-12 px-3 py-2 border border-gray-30 rounded-md text-body-2-regular text-black focus:outline-none focus:ring-2 focus:ring-primary-20 focus:border-transparent"
                 placeholderText="날짜를 선택하세요"
                 wrapperClassName="w-full"
+                minDate={new Date()}
               />
             </div>
           </div>
