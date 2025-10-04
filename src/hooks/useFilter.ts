@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { FilterOptions } from "@/types/filter";
-import { getTodayDate } from "@/utils/date";
 
 // 필터 상태관리 훅
 
 export const useFilter = (initialFilters: FilterOptions = {}) => {
   const [filters, setFilters] = useState<FilterOptions>({
     ...initialFilters,
-    startDate: initialFilters.startDate || getTodayDate(),
+    startDate: initialFilters.startDate || new Date(),
   });
 
   // 필터 값 변경 핸들러
@@ -36,7 +35,7 @@ export const useFilter = (initialFilters: FilterOptions = {}) => {
   const resetFilters = () => {
     setFilters({
       ...initialFilters,
-      startDate: initialFilters.startDate || getTodayDate(),
+      startDate: initialFilters.startDate || new Date(),
     });
   };
 
