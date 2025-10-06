@@ -51,7 +51,7 @@ module.exports = {
         caption: ["12px", { lineHeight: "16px", fontWeight: "400" }],
         h1: ["28px", { lineHeight: "100%", fontWeight: "700" }],
         h2: ["24px", { lineHeight: "100%", fontWeight: "700" }],
-        h3: ["30px", { lineHeight: "100%", fontWeight: "700" }],
+        h3: ["20px", { lineHeight: "100%", fontWeight: "700" }],
       },
     },
   },
