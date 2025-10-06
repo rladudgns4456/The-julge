@@ -1,4 +1,4 @@
-export type UserType = "employer" | "employee" | null;
+export type UserType = User["type"] | null;
 
 // 가게 정보
 export interface Shop {
