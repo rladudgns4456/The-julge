@@ -164,6 +164,129 @@ export const mockNotifications: NotificationItem[] = [
     },
     links: [],
   },
+  {
+    item: {
+      id: "notif-005",
+      createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+      result: "accepted",
+      read: false,
+      application: {
+        item: {
+          id: "app-005",
+          status: "accepted",
+        },
+        href: "/applications/app-005",
+      },
+      shop: {
+        item: {
+          id: "shop-005",
+          name: "스타벅스 강남점",
+          category: "카페",
+          address1: "서울특별시 강남구",
+          address2: "테헤란로 123",
+          description: "강남역 근처 스타벅스",
+          imageUrl:
+            "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FbadX3j%2Fbtq1dzBajoB%2FAAAAAAAAAAAAAAAAAAAAAAHjXPBBUId8mXTGGGhITSZ31cJxDxVfAiHQs5k0wWG5%2Fimg.webp%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1761922799%26allow_ip%3D%26allow_referer%3D%26signature%3DeEd5fq4XpX3nDc1Jj96okAIOsBY%253D",
+          originalHourlyPay: 12000,
+        },
+        href: "/shops/shop-005",
+      },
+      notice: {
+        item: {
+          id: "notice-004",
+          hourlyPay: 13000,
+          description: "주말 아침 근무 가능하신 분",
+          startsAt: "2024-03-15T09:00:00Z",
+          workhour: 8,
+          closed: false,
+        },
+        href: "/notices/notice-005",
+      },
+    },
+    links: [],
+  },
+  {
+    item: {
+      id: "notif-006",
+      createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+      result: "accepted",
+      read: false,
+      application: {
+        item: {
+          id: "app-006",
+          status: "accepted",
+        },
+        href: "/applications/app-006",
+      },
+      shop: {
+        item: {
+          id: "shop-006",
+          name: "스타벅스 강남점",
+          category: "카페",
+          address1: "서울특별시 강남구",
+          address2: "테헤란로 123",
+          description: "강남역 근처 스타벅스",
+          imageUrl:
+            "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FbadX3j%2Fbtq1dzBajoB%2FAAAAAAAAAAAAAAAAAAAAAAHjXPBBUId8mXTGGGhITSZ31cJxDxVfAiHQs5k0wWG5%2Fimg.webp%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1761922799%26allow_ip%3D%26allow_referer%3D%26signature%3DeEd5fq4XpX3nDc1Jj96okAIOsBY%253D",
+          originalHourlyPay: 12000,
+        },
+        href: "/shops/shop-006",
+      },
+      notice: {
+        item: {
+          id: "notice-006",
+          hourlyPay: 13000,
+          description: "주말 아침 근무 가능하신 분",
+          startsAt: "2024-03-15T09:00:00Z",
+          workhour: 8,
+          closed: false,
+        },
+        href: "/notices/notice-006",
+      },
+    },
+    links: [],
+  },
+  {
+    item: {
+      id: "notif-007",
+      createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+      result: "accepted",
+      read: false,
+      application: {
+        item: {
+          id: "app-007",
+          status: "accepted",
+        },
+        href: "/applications/app-007",
+      },
+      shop: {
+        item: {
+          id: "shop-007",
+          name: "스타벅스 강남점",
+          category: "카페",
+          address1: "서울특별시 강남구",
+          address2: "테헤란로 123",
+          description: "강남역 근처 스타벅스",
+          imageUrl:
+            "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FbadX3j%2Fbtq1dzBajoB%2FAAAAAAAAAAAAAAAAAAAAAAHjXPBBUId8mXTGGGhITSZ31cJxDxVfAiHQs5k0wWG5%2Fimg.webp%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1761922799%26allow_ip%3D%26allow_referer%3D%26signature%3DeEd5fq4XpX3nDc1Jj96okAIOsBY%253D",
+          originalHourlyPay: 12000,
+        },
+        href: "/shops/shop-007",
+      },
+      notice: {
+        item: {
+          id: "notice-007",
+          hourlyPay: 13000,
+          description: "주말 아침 근무 가능하신 분",
+          startsAt: "2024-03-15T09:00:00Z",
+          workhour: 8,
+          closed: false,
+        },
+        href: "/notices/notice-004",
+      },
+    },
+    links: [],
+  },
 ];
 
 export const getMockNotificationResponse = (): NotificationListResponse => {

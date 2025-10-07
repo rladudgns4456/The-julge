@@ -39,7 +39,7 @@ module.exports = {
         yellow: "#FEE500",
       },
       screens: {
-        mobile: { max: "375px" },
+        mobile: { max: "743px" },
         tablet: { min: "744px", max: "1439px" },
         desktop: { min: "1440px" },
       },
