@@ -3,7 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/common/header/Header";
 import Footer from "@/components/common/footer/Footer";
-import DevTool from "@/constants/DevTool";
+import DevTool from "@/components/test/DevTool";
 
 export const metadata: Metadata = {
   title: "Create Next App",
