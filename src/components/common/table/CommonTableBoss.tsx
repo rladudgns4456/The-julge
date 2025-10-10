@@ -37,29 +37,36 @@ const CommonTable: React.FC<TableProps> = ({ title, data, onApprove, onReject })
       <h2 className="text-xl font-bold text-gray-900 p-6 pb-4">{title}</h2>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead>
-            <tr className="bg-pink-500 text-white">
-              <th className="px-6 py-3 text-left text-sm font-medium rounded-tl-lg">신청자</th>
-              <th className="px-6 py-3 text-left text-sm font-medium">소개</th>
-              <th className="px-6 py-3 text-left text-sm font-medium">전화번호</th>
-              <th className="px-6 py-3 text-left text-sm font-medium rounded-tr-lg">상태</th>
+            <tr className="bg-pink-50">
+              <th className="w-[228px] px-6 py-4 text-center text-sm font-semibold text-gray-700 rounded-tl-lg">
+                신청자
+              </th>
+              <th className="w-[300px] px-6 py-4 text-center text-sm font-semibold text-gray-700">소개</th>
+              <th className="w-[200px] px-6 py-4 text-center text-sm font-semibold text-gray-700">전화번호</th>
+              <th className="w-[236px] px-6 py-4 text-center text-sm font-semibold text-gray-700 rounded-tr-lg">
+                상태
+              </th>
             </tr>
           </thead>
           <tbody>
             {data.map((applicant, index) => (
               <tr
                 key={applicant.id}
-                className={`border-b border-gray-200 hover:bg-gray-10 transition-colors ${
-                  index === data.length - 1 ? "rounded-b-lg" : ""
-                }`}
+                className={`${
+                  index !== data.length - 1 ? "border-b border-gray-100" : ""
+                } hover:bg-gray-10 transition-colors`}
+                style={{ height: "70px" }}
               >
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">{applicant.name}</td>
-                <td className="px-6 py-4 text-sm text-gray-700 max-w-xs">
+                <td className="px-6 py-4 text-sm font-medium text-gray-900 text-center">{applicant.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-700 text-center">
                   <div className="line-clamp-2">{applicant.introduction}</div>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-700">{applicant.phoneNumber}</td>
-                <td className="px-6 py-4 text-sm">{getStatusElement(applicant)}</td>
+                <td className="px-6 py-4 text-sm text-gray-700 text-center">{applicant.phoneNumber}</td>
+                <td className="px-6 py-4 text-sm text-center flex justify-center items-center">
+                  {getStatusElement(applicant)}
+                </td>
               </tr>
             ))}
           </tbody>

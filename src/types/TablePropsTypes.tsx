@@ -22,6 +22,20 @@ export interface TableProps {
   onReject: (id: string) => void;
 }
 
+// 신청 내역용 데이터 타입
+export interface ApplicationData {
+  id: string;
+  store: string;
+  date: string;
+  hourlyWage: string;
+  status: "approved" | "rejected" | "pending";
+}
+
+// 신청 내역 테이블 Props
+export interface ApplicationTableProps {
+  data: ApplicationData[];
+}
+
 // 기존 타입
 export interface User {
   id: string;
