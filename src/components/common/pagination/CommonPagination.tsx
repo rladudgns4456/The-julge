@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { PaginationProps } from "@/types/TablePropsTypes";
 
 const CommonPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
@@ -51,11 +52,9 @@ const CommonPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
-        className="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-8 h-8 flex items-center justify-center rounded  border-gray-30 hover:bg-gray-10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
+        <Image src="/arrow.svg" alt="이전 페이지" width={16} height={16} className="rotate-180" />
       </button>
 
       {pageNumbers.map(pageNumber => (
@@ -63,9 +62,7 @@ const CommonPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
           key={pageNumber}
           onClick={() => onPageChange(pageNumber)}
           className={`w-8 h-8 flex items-center justify-center rounded text-sm font-medium transition-colors ${
-            pageNumber === currentPage
-              ? "bg-red-500 text-white"
-              : "border border-gray-300 text-gray-600 hover:bg-gray-50"
+            pageNumber === currentPage ? "bg-red-30 text-white" : " border-gray-30 text-gray-50 hover:bg-gray-10"
           }`}
         >
           {pageNumber}
@@ -75,11 +72,9 @@ const CommonPagination: React.FC<PaginationProps> = ({ currentPage, totalPages, 
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}
-        className="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-8 h-8 flex items-center justify-center rounded  hover:bg-gray-10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+        <Image src="/arrow.svg" alt="다음 페이지" width={16} height={16} />
       </button>
     </div>
   );
