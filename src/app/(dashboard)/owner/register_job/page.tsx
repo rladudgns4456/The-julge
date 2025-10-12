@@ -11,45 +11,48 @@ export default function jobRegisterpage() {
         </button>
       </div>
       <form action="submit" className="w-full">
-        <div className="w-full grid grid-cols-3 gap-5 text-body-1-regular">
-          <div className="flex flex-col">
+        <div className="w-full grid grid-cols-3 gap-5">
+          <div className="flex flex-col text-body-1-regular">
             <label htmlFor="hourlyPay" className="mb-2">
               시급
             </label>
             <div className="flex items-center gap-2 p-4 border-solid border-gray-30 border rounded-md">
-              <input id="hourlyPay" className="flex-1 outline-none" type="text" />
+              <input id="hourlyPay" className="flex-1 outline-none" type="text" placeholder="10,030" />
               <span>원</span>
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-body-1-regular">
             <label htmlFor="startsAt" className="mb-2">
               시작 일시
             </label>
-            <div className="flex items-center gap-2 p-4 border-solid border-gray-30 border rounded-md">
-              <input id="startsAt" className="flex-1 outline-none" type="text" />
+            <div className="flex items-center w-full gap-2 p-4 border-solid border-gray-30 border rounded-md">
+              <input id="startsAt" className="flex-1 outline-none" type="datetime-local" />
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-body-1-regular">
             <label htmlFor="workhour" className="mb-2">
               업무 시간
             </label>
             <div className="flex items-center gap-2 p-4 border-solid border-gray-30 border rounded-md">
-              <input id="workhour" className="flex-1 outline-none" type="text" />
+              <input id="workhour" className="flex-1 outline-none" type="text" placeholder="8" />
               <span>시간</span>
             </div>
           </div>
-          <div className="w-full mt-1 flex flex-col col-span-3">
+          <div className="w-full mt-1 flex flex-col col-span-3 text-body-1-regular">
             <label htmlFor="description" className="mb-2">
               공고 설명
             </label>
             <textarea
               id="description"
               className="w-full h-[153px] p-4 border-solid border-gray-30 border rounded-md outline-none"
+              placeholder="공고에 대한 기본적인 설명을 작성해주세요"
             />
           </div>
-          <Button variant="primary" className="col-start-2">
-            등록하기
-          </Button>
+          <div className="col-start-2">
+            <Button variant="gray" className=" w-full" size="large">
+              등록하기
+            </Button>
+          </div>
         </div>
       </form>
     </main>
