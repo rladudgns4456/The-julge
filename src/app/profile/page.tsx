@@ -6,10 +6,10 @@ export default function ProfilePage() {
     <div className="flex flex-col min-h-screen bg-white">
       <main className="flex-1 flex flex-col items-center">
         <div className="w-full max-w-[60.25rem] mx-auto px-5 tablet:px-8 mt-[116px] mb-[118px]">
-          {/* ✅ 타이틀 왼쪽 정렬 */}
+          {/* 타이틀 */}
           <h1 className="text-h2 text-black mb-[40px] text-left">내 프로필</h1>
 
-          {/* ✅ 박스 중앙 정렬 */}
+          {/* 안내 박스 */}
           <section
             className="
               w-[964px]

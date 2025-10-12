@@ -1,3 +1,5 @@
+/* 테스트 모달입니다. */
+
 import React from "react";
 
 interface ModalProps {
@@ -17,3 +19,5 @@ export default function Modal({ children, onClose }: ModalProps) {
     </div>
   );
 }
+
+/* 테스트 모달입니다. */
