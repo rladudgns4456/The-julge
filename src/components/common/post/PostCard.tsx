@@ -82,13 +82,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
         )}
       </div>
 
-      <div className="p-3 flex flex-col">
+      <div className="p-3 sm:p-4 flex flex-col">
         <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${titleColor}`}>
           {post.shop.name}
         </h3>
 
         <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <Image src={isClosed ? "/clock-closed.svg" : "/clock.svg"} alt="시간" width={20} height={20} />
+          <img
+            src={isClosed ? "/clock-closed.svg" : "/clock.svg"}
+            alt="시간"
+            width={20}
+            height={20}
+            className="flex-shrink-0"
+          />
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1">
             <span className="text-caption sm:text-body-2-regular">{formatDate(startDate)}</span>
             <span className="text-caption sm:text-body-2-regular">
@@ -98,7 +104,13 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
         </div>
 
         <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <Image src={isClosed ? "/Location-closed.svg" : "/Location.svg"} alt="위치" width={20} height={20} />
+          <img
+            src={isClosed ? "/Location-closed.svg" : "/Location.svg"}
+            alt="위치"
+            width={20}
+            height={20}
+            className="flex-shrink-0"
+          />
           <span className="truncate text-caption sm:text-body-2-regular">{post.shop.address1}</span>
         </div>
 
