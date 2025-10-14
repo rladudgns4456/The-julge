@@ -49,11 +49,23 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   const isExpired = currentDate > startDate;
   const isClosed = post.closed || isExpired;
 
+  // 색상 스타일 객체
+  const COLOR_STYLES = {
+    closed: {
+      text: "text-gray-30",
+      title: "text-gray-30",
+      price: "text-gray-30",
+    },
+    active: {
+      text: "text-gray-50",
+      title: "text-black",
+      price: "text-black",
+    },
+  };
+
   // 컴포넌트 상태 및 스타일 변수들
   const payIncreaseRate = getPayIncreaseRate();
-  const textColor = isClosed ? "text-gray-30" : "text-gray-50";
-  const titleColor = isClosed ? "text-gray-30" : "text-black";
-  const priceColor = isClosed ? "text-gray-30" : "text-black";
+  const colorStyle = isClosed ? COLOR_STYLES.closed : COLOR_STYLES.active;
 
   // 카드 클릭 핸들러
   const handleCardClick = () => {
@@ -83,17 +95,17 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
       </div>
 
       <div className="p-3 sm:p-4 flex flex-col">
-        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${titleColor}`}>
+        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${colorStyle.title}`}>
           {post.shop.name}
         </h3>
 
-        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <img
+        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${colorStyle.text}`}>
+          <Image
             src={isClosed ? "/clock-closed.svg" : "/clock.svg"}
             alt="시간"
             width={20}
             height={20}
-            className="flex-shrink-0"
+            className="flex-shrink-0 w-[20px] h-[20px]"
           />
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1">
             <span className="text-caption sm:text-body-2-regular">{formatDate(startDate)}</span>
@@ -103,19 +115,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
           </div>
         </div>
 
-        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <img
+        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${colorStyle.text}`}>
+          <Image
             src={isClosed ? "/Location-closed.svg" : "/Location.svg"}
             alt="위치"
             width={20}
             height={20}
-            className="flex-shrink-0"
+            className="flex-shrink-0 w-[20px] h-[20px]"
           />
           <span className="truncate text-caption sm:text-body-2-regular">{post.shop.address1}</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 mt-4">
-          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${priceColor}`}>
+          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${colorStyle.price}`}>
             {post.hourlyPay.toLocaleString()}원
           </span>
 
