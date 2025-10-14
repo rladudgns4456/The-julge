@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { PostCardProps, PostData } from "@/types/post";
+import { formatTime, formatDate } from "@/utils/date";
 
 // 포스트 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
 export type { PostCardProps, PostData };
@@ -28,26 +29,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   const endDate = new Date(startDate.getTime() + post.workhour * 60 * 60 * 1000);
   const currentDate = new Date();
 
-  // 시간 문자열을 HH:mm 형식으로 포맷팅
-  const formatTime = (date: Date): string => {
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
-
-  // 날짜 문자열을 YYYY.MM.DD 형식으로 포맷팅
-  const formatDate = (date: Date): string => {
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
   // 시간 기반 마감 여부 확인
   const isExpired = currentDate > startDate;
   const isClosed = post.closed || isExpired;
@@ -70,7 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
 
   // 카드 클릭 핸들러
   const handleCardClick = () => {
-    if (onClick) onClick(post);
+    onClick?.(post);
   };
 
   return (
