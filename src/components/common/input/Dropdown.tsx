@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+
 import { Option, CustomDropdownProps } from "@/types/ui";
+
+type CustomDropdownWithButtonClassNameProps = CustomDropdownProps & {
+  className?: string;
+  buttonClassName?: string;
+};
 
 export default function CustomDropdown({
   label,
@@ -11,7 +17,9 @@ export default function CustomDropdown({
   required,
   error,
   onChange,
-}: CustomDropdownProps) {
+  className = "",
+  buttonClassName = "h-[58px]",
+}: CustomDropdownWithButtonClassNameProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -28,7 +36,7 @@ export default function CustomDropdown({
   const selectedLabel = options.find(opt => opt.value === value)?.label || "선택";
 
   return (
-    <div className="flex flex-col gap-1 w-full" ref={dropdownRef}>
+    <div className={`flex flex-col gap-1 w-full relative ${className}`} ref={dropdownRef}>
       {label && (
         <label htmlFor={name} className="text-body-2-regular text-gray-50">
           {label}
@@ -43,7 +51,9 @@ export default function CustomDropdown({
             error
               ? "border-red-40 focus:ring-2 focus:ring-red-30 bg-red-10"
               : "border-gray-30 focus:ring-2 focus:ring-blue-20"
-          }`}
+          }
+          ${buttonClassName}
+        `}
         onClick={() => setOpen(!open)}
       >
         <span className={value ? "text-black" : "text-gray-40"}>{selectedLabel}</span>
@@ -58,7 +68,7 @@ export default function CustomDropdown({
       </button>
 
       {open && (
-        <ul className="mt-1 max-h-48 overflow-y-auto rounded-lg border border-gray-30 bg-white shadow-md animate-fadeIn">
+        <ul className="absolute top-full left-0 right-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-lg border border-gray-30 bg-white shadow-md animate-fadeIn">
           {options.map((opt, index) => (
             <li
               key={`${opt.value}-${index}`}
