@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import NotificationDropdown from "./NotificationDropdown";
 import { useNotifications } from "@/hooks/useNotifications";
 
-const AlarmButton = () => {
+const NotificationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { unreadCount } = useNotifications();
@@ -42,4 +42,4 @@ const AlarmButton = () => {
   );
 };
 
-export default AlarmButton;
+export default NotificationButton;

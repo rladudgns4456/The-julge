@@ -1,17 +1,20 @@
 "use client";
 
-import { ChangeEvent } from "react";
+import { ChangeEvent, FocusEvent } from "react";
 
 interface InputProps {
   label?: string;
-  type?: "text" | "email" | "password" | "number";
+  type?: "text" | "email" | "password" | "number" | "datetime-local" | "date";
   name: string;
   value: string;
+  inputClassName?: string; //  input 스타일 추가
   placeholder?: string;
   unit?: string;
   required?: boolean;
   error?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
@@ -19,11 +22,14 @@ export default function Input({
   type = "text",
   name,
   value,
+  inputClassName = "", //  input 스타일 추가
   placeholder,
   unit,
   required,
   error,
   onChange,
+  onFocus,
+  onBlur,
 }: InputProps) {
   return (
     <div className="flex flex-col gap-1 w-full">
@@ -44,6 +50,9 @@ export default function Input({
           value={value}
           placeholder={placeholder}
           onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          required={required}
           className={`w-full rounded-lg py-2 text-body-1-regular bg-white placeholder-gray-40 focus:outline-none focus:ring-2
             ${error ? "border border-red-40 focus:ring-red-30 bg-red-10" : "border border-gray-30 focus:ring-blue-20"}
             ${unit ? "pl-3 pr-7" : "px-3"}
@@ -52,6 +61,7 @@ export default function Input({
                 ? "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
                 : ""
             }
+            ${inputClassName} 
           `}
         />
 
