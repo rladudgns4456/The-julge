@@ -53,13 +53,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   const COLOR_STYLES = {
     closed: {
       text: "text-gray-30",
-      title: "text-gray-30",
-      price: "text-gray-30",
+      primary: "text-gray-30",
     },
     active: {
       text: "text-gray-50",
-      title: "text-black",
-      price: "text-black",
+      primary: "text-black",
     },
   };
 
@@ -95,7 +93,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
       </div>
 
       <div className="p-3 sm:p-4 flex flex-col">
-        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${colorStyle.title}`}>
+        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${colorStyle.primary}`}>
           {post.shop.name}
         </h3>
 
@@ -127,7 +125,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 mt-4">
-          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${colorStyle.price}`}>
+          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${colorStyle.primary}`}>
             {post.hourlyPay.toLocaleString()}원
           </span>
 
