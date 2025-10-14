@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
-/**
+/*
  * Axios 인스턴스 생성
  * 환경변수 NEXT_PUBLIC_API_URL을 사용하여 유연한 API URL 관리
  *
@@ -9,7 +9,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestCo
  * - 프로덕션환경 (실제API): NEXT_PUBLIC_API_URL=https://bootcamp-api.codeit.kr/api/0-1/the-julge
  */
 const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://bootcamp-api.codeit.kr/api/0-1/the-julge",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
   headers: {
     "Content-Type": "application/json",
   },
