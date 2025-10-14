@@ -2,7 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
-import { PostCardProps } from "@/types/post";
+import { PostCardProps, PostData } from "@/types/post";
+
+// 포스트 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
+export type { PostCardProps, PostData };
 
 /**
  * THE-JULGE 프로젝트 포스트 카드 컴포넌트
@@ -72,7 +75,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
 
   return (
     <div
-      className={`bg-white rounded-[12px] overflow-hidden shadow-sm border border-gray-20 w-[171px] h-[261px] sm:w-[312px] sm:h-[349px] flex flex-col justify-center ${
+      className={`bg-white rounded-[12px] overflow-hidden shadow-sm border border-gray-20 min-w-[171px] h-[261px] sm:w-full sm:h-[349px] flex flex-col justify-center ${
         onClick && !isClosed ? "cursor-pointer hover:shadow-md transition-shadow" : ""
       }`}
       onClick={handleCardClick}
