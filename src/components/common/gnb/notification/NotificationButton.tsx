@@ -30,12 +30,12 @@ const NotificationButton = () => {
 
   const hasUnread = unreadCount > 0;
 
-  const iconColor = hasUnread ? "/active.svg" : "/inactive.svg";
+  const iconType = hasUnread ? "/active.svg" : "/inactive.svg";
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button onClick={toggleDropdown}>
-        <Image src={iconColor} className={`${iconColor}`} width={24} height={24} alt="알림 아이콘" />
+        <Image src={iconType} className={`${iconType}`} width={24} height={24} alt="알림 아이콘" />
       </button>
       {isOpen && <NotificationDropdown onClose={() => setIsOpen(false)} />}
     </div>

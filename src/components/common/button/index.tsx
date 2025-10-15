@@ -41,7 +41,7 @@ const Button: React.FC<ButtonProps> = ({
     primary: "bg-primary-20 text-white border border-transparent hover:bg-primary-10 focus:ring-primary-20",
     outlined: "bg-white text-primary-20 border border-primary-20 hover:bg-red-10 focus:ring-primary-20",
     blue: "bg-white text-blue-20 border border-blue-20 hover:bg-blue-10 focus:ring-blue-20",
-    gray: "bg-white text-gray-50 border border-gray-30 hover:border-gray-40 focus:ring-gray-30",
+    gray: "bg-gray-40 text-white border border-gray-30 hover:border-gray-40 focus:ring-gray-30",
   };
 
   const finalClasses = [BASE_STYLES, SIZE_STYLES[size], VARIANT_STYLES[variant], className].filter(Boolean).join(" ");
