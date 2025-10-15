@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FocusEvent, ChangeEvent, FormEvent } from "react";
+import { useState, FocusEvent, FormEvent } from "react";
 import Image from "next/image";
 import Button from "@/components/common/button/index";
 import Input from "@/components/common/input/Input";
@@ -12,7 +12,7 @@ interface CreateNotice {
   description: string;
 }
 
-export default function noticeRegisterpage() {
+export default function NoticeRegisterPage() {
   const [formData, setFormData] = useState<CreateNotice>({
     hourlyPay: "",
     startsAt: "",
@@ -37,7 +37,7 @@ export default function noticeRegisterpage() {
   };
 
   // 클릭시 text로 변경
-  const hadnleDateBlur = (e: FocusEvent<HTMLInputElement>) => {
+  const handleDateFocusChange = (e: FocusEvent<HTMLInputElement>) => {
     if (!e.target.value) {
       e.target.type = "text";
       setDateInputType("text");
@@ -47,8 +47,6 @@ export default function noticeRegisterpage() {
   // 폼 제출
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    console.log("제출 데이터:", formData);
   };
 
   // 닫기
@@ -86,7 +84,7 @@ export default function noticeRegisterpage() {
             value={formData.startsAt}
             onChange={handleInputChange}
             onFocus={handleDateFocus}
-            onBlur={hadnleDateBlur}
+            onBlur={handleDateFocusChange}
             required={true}
           />
           {/* 근무 시간 */}
