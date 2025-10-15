@@ -2,7 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import { PostCardProps } from "@/types/post";
+import { PostCardProps, PostData } from "@/types/post";
+import { formatTime, formatDate } from "@/utils/date";
+
+// 포스트 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
+export type { PostCardProps, PostData };
 
 /**
  * THE-JULGE 프로젝트 포스트 카드 컴포넌트
@@ -25,44 +29,34 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   const endDate = new Date(startDate.getTime() + post.workhour * 60 * 60 * 1000);
   const currentDate = new Date();
 
-  // 시간 문자열을 HH:mm 형식으로 포맷팅
-  const formatTime = (date: Date): string => {
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
-
-  // 날짜 문자열을 YYYY.MM.DD 형식으로 포맷팅
-  const formatDate = (date: Date): string => {
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
   // 시간 기반 마감 여부 확인
   const isExpired = currentDate > startDate;
   const isClosed = post.closed || isExpired;
 
+  // 색상 스타일 객체
+  const COLOR_STYLES = {
+    closed: {
+      text: "text-gray-30",
+      primary: "text-gray-30",
+    },
+    active: {
+      text: "text-gray-50",
+      primary: "text-black",
+    },
+  };
+
   // 컴포넌트 상태 및 스타일 변수들
   const payIncreaseRate = getPayIncreaseRate();
-  const textColor = isClosed ? "text-gray-30" : "text-gray-50";
-  const titleColor = isClosed ? "text-gray-30" : "text-black";
-  const priceColor = isClosed ? "text-gray-30" : "text-black";
+  const colorStyle = isClosed ? COLOR_STYLES.closed : COLOR_STYLES.active;
 
   // 카드 클릭 핸들러
   const handleCardClick = () => {
-    if (onClick) onClick(post);
+    onClick?.(post);
   };
 
   return (
     <div
-      className={`bg-white rounded-[12px] overflow-hidden shadow-sm border border-gray-20 w-[171px] h-[261px] sm:w-[312px] sm:h-[349px] flex flex-col justify-center ${
+      className={`bg-white rounded-[12px] overflow-hidden shadow-sm border border-gray-20 min-w-[171px] h-[261px] sm:w-full sm:h-[349px] flex flex-col justify-center ${
         onClick && !isClosed ? "cursor-pointer hover:shadow-md transition-shadow" : ""
       }`}
       onClick={handleCardClick}
@@ -83,17 +77,17 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
       </div>
 
       <div className="p-3 sm:p-4 flex flex-col">
-        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${titleColor}`}>
+        <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${colorStyle.primary}`}>
           {post.shop.name}
         </h3>
 
-        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <img
+        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${colorStyle.text}`}>
+          <Image
             src={isClosed ? "/clock-closed.svg" : "/clock.svg"}
             alt="시간"
             width={20}
             height={20}
-            className="flex-shrink-0"
+            className="flex-shrink-0 w-[20px] h-[20px]"
           />
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-1">
             <span className="text-caption sm:text-body-2-regular">{formatDate(startDate)}</span>
@@ -103,19 +97,19 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
           </div>
         </div>
 
-        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${textColor}`}>
-          <img
+        <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${colorStyle.text}`}>
+          <Image
             src={isClosed ? "/Location-closed.svg" : "/Location.svg"}
             alt="위치"
             width={20}
             height={20}
-            className="flex-shrink-0"
+            className="flex-shrink-0 w-[20px] h-[20px]"
           />
           <span className="truncate text-caption sm:text-body-2-regular">{post.shop.address1}</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 mt-4">
-          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${priceColor}`}>
+          <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${colorStyle.primary}`}>
             {post.hourlyPay.toLocaleString()}원
           </span>
 

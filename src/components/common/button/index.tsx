@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   // 공통 스타일
   const BASE_STYLES =
-    "font-medium rounded-md transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-40 disabled:text-white disabled:border-gray-40 disabled:cursor-not-allowed";
+    "font-medium rounded-md transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-offset-2 disabled:bg-gray-40 disabled:text-white disabled:border-gray-40 disabled:cursor-not-allowed";
 
   // 높이별 스타일
   const SIZE_STYLES = {
@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
 
   // variant별 스타일
   const VARIANT_STYLES = {
-    primary: "bg-primary-20 text-white hover:bg-primary-10 focus:ring-primary-20",
+    primary: "bg-primary-20 text-white border border-transparent hover:bg-primary-10 focus:ring-primary-20",
     outlined: "bg-white text-primary-20 border border-primary-20 hover:bg-red-10 focus:ring-primary-20",
     blue: "bg-white text-blue-20 border border-blue-20 hover:bg-blue-10 focus:ring-blue-20",
     gray: "bg-white text-gray-50 border border-gray-30 hover:border-gray-40 focus:ring-gray-30",
