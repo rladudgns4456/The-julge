@@ -1,16 +1,13 @@
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Logout = () => {
   const { logout } = useAuth();
+  const router = useRouter();
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Logout failed:", error);
-      alert("로그아웃에 실패했습니다.");
-    }
+    await logout();
+    router.push("/");
   };
 
   return <button onClick={handleLogout}>로그아웃</button>;
