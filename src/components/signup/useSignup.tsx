@@ -16,7 +16,6 @@ export interface ModalState {
   type: "duplicateEmail" | "success" | null;
 }
 
-// SignupLogic 커스텀 훅  -> signupui이랑 연동
 export const useSignupLogic = () => {
   const router = useRouter();
 
@@ -85,9 +84,24 @@ export const useSignupLogic = () => {
 
       // 성공 모달 표시
       setModalState({ isOpen: true, type: "success" });
-    } catch (error: any) {
-      const errorMessage = error.message;
-      const [statusCode, message] = errorMessage.split(":");
+    } catch (error: unknown) {
+      let statusCode = "unknown";
+      let message = "알 수 없는 오류";
+
+      // 에러 타입 가드 및 메시지 파싱
+      if (error instanceof Error) {
+        if (error.message && error.message.includes(":")) {
+          const [parsedStatusCode, parsedMessage] = error.message.split(":");
+          statusCode = parsedStatusCode?.trim() || "unknown";
+          message = parsedMessage?.trim() || error.message;
+        } else {
+          message = error.message || "알 수 없는 오류";
+        }
+      } else if (typeof error === "string") {
+        message = error;
+      } else {
+        message = "예상치 못한 오류가 발생했습니다.";
+      }
 
       handleSignupError(statusCode, message);
     } finally {

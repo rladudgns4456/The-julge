@@ -18,7 +18,6 @@ export default function LoginUi() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // AuthLoginApi 전역 상태 구독
   useEffect(() => {
     const unsubscribe = AuthLoginApi.subscribe(user => {
       setCurrentUser(user);
@@ -37,7 +36,7 @@ export default function LoginUi() {
     }
   }, [currentUser, router]);
 
-  // 통합 폼 관리 훅
+  // 통합 폼 관리
   const {
     formData,
     errors,
@@ -70,32 +69,24 @@ export default function LoginUi() {
   // 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // 로그인 에러 메시지 초기화
     setLoginError("");
-
     // 공통 유효성 검사
     if (!validateLoginForm()) return;
-
-    // 로딩 시작
     setIsLoading(true);
 
     try {
-      // AuthLoginApi를 사용한 로그인 (전역 상태 자동 업데이트됨)
+      // AuthLoginApi를 사용한 로그인
       const result = await AuthLoginApi.executeLogin(formData.email, formData.password);
 
       if (result.success) {
         // 로그인 성공 - 전역 상태가 업데이트되어 useEffect에서 자동으로 프로필로 이동
-        // router.push는 useEffect에서 처리됨
       } else {
-        // 로그인 실패 시 에러 메시지
         setLoginError(result.message);
       }
     } catch (error) {
       // 예상치 못한 에러
       setLoginError("로그인 중 오류가 발생했습니다.");
     } finally {
-      // 로딩 종료
       setIsLoading(false);
     }
   };
@@ -132,7 +123,6 @@ export default function LoginUi() {
             onChange={handleInputChange}
           />
 
-          {/* 로그인 에러 메시지 */}
           {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
 
           <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>

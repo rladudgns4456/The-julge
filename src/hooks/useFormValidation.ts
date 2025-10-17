@@ -6,12 +6,11 @@ export interface BaseErrors {
   password: string;
 }
 
-// 회원가입용 확장 에러 타입
 export interface SignupErrors extends BaseErrors {
   confirmPassword: string;
 }
 
-// 에러 검증 전용 훅
+// 에러 검증 훅
 export const useFormValidation = <E extends BaseErrors>(initialErrors: E) => {
   const [errors, setErrors] = useState<E>(initialErrors);
 
@@ -34,7 +33,7 @@ export const useFormValidation = <E extends BaseErrors>(initialErrors: E) => {
     return "";
   };
 
-  // 로그인용 유효성 검사
+  // 로그인용 유효성
   const validateLoginForm = (email: string, password: string): boolean => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
@@ -48,7 +47,7 @@ export const useFormValidation = <E extends BaseErrors>(initialErrors: E) => {
     return !emailError && !passwordError;
   };
 
-  // 회원가입용 유효성 검사
+  // 회원가입용 유효성
   const validateSignupForm = (email: string, password: string, confirmPassword?: string): boolean => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);

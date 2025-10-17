@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -13,17 +15,23 @@ export default function Footer() {
         <ul className="flex gap-2.5 mobile:order-2">
           <li>
             <Link href="mailto:thejulge@example.com">
-              <Image src="/email.svg" width={25} height={25} alt="이메일 아이콘" />
+              <Image src="/email.svg" width={25} height={25} alt="이메일 아이콘" className="w-[25px] h-[25px]" />
             </Link>
           </li>
           <li>
             <Link href="https://www.facebook.com/">
-              <Image src="/facebook.svg" width={25} height={25} alt="페이스북 아이콘" />
+              <Image src="/facebook.svg" width={25} height={25} alt="페이스북 아이콘" className="w-[25px] h-[25px]" />
             </Link>
           </li>
           <li>
             <Link href="https://www.instagram.com">
-              <Image src="/instagram.svg" width={25} height={25} alt="인스타그램 아이콘" />
+              <Image
+                src="/instagram.svg"
+                width={25}
+                height={25}
+                alt="인스타그램 아이콘"
+                className="w-[25px] h-[25px]"
+              />
             </Link>
           </li>
         </ul>

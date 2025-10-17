@@ -4,7 +4,7 @@ import Image from "next/image";
 import Input from "@/components/common/input/Input";
 import Button from "@/components/common/button";
 import Modal from "@/components/common/modal/CommonModal";
-import { useSignupLogic } from "@/components/login/LoginCheckList";
+import { useSignupLogic } from "@/components/signup/useSignup";
 
 export default function SignupUi() {
   const {

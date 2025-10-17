@@ -14,6 +14,11 @@ export default function Header() {
             width={112}
             height={40}
             className="w-[84px] tablet:w-[112px] desktop:w-[112px] h-auto"
+            style={{
+              height: "auto",
+              width: "100%",
+            }}
+            priority
           />
         </Link>
         {/* 데스크탑, 태블릿 검색창 */}

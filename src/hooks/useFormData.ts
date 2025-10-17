@@ -6,7 +6,7 @@ export interface BaseFormData {
   password: string;
 }
 
-// 회원가입용 확장 폼 데이터
+// 사장|알바 폼
 export interface SignupFormData extends BaseFormData {
   confirmPassword: string;
   userType: "employee" | "employer";
@@ -15,8 +15,6 @@ export interface SignupFormData extends BaseFormData {
 // 폼 데이터 관리 전용 훅
 export const useFormData = <T extends BaseFormData>(initialFormData: T) => {
   const [formData, setFormData] = useState<T>(initialFormData);
-
-  // 폼 데이터 업데이트
   const updateFormData = (updates: Partial<T>) => {
     setFormData(prev => ({
       ...prev,

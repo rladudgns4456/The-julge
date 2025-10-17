@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios from "@/api/axios";
 import { LoginResponse } from "@/types/user";
 
 export interface LoginRequest {
@@ -22,13 +22,14 @@ export const loginUser = async (loginData: LoginRequest): Promise<LoginApiRespon
       message: "로그인에 성공했습니다.",
       data: response.data,
     };
-  } catch (error: any) {
-    // 에러 응답이 있는 경우
-    if (error.response) {
-      const errorMessage = error.response.data?.message || "로그인에 실패했습니다.";
+  } catch (error: unknown) {
+    // 에러 타입 가드 및 처리
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as { response: { status: number; data?: { message?: string } } };
+      const errorMessage = axiosError.response.data?.message || "로그인에 실패했습니다.";
       return {
         success: false,
-        message: `${error.response.status === 401 ? "이메일 또는 비밀번호가 올바르지 않습니다." : errorMessage}`,
+        message: `${axiosError.response.status === 401 ? "이메일 또는 비밀번호가 올바르지 않습니다." : errorMessage}`,
       };
     }
     // 네트워크 에러 등 기타 에러
