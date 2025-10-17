@@ -5,12 +5,12 @@ import Button from "@/components/common/button";
 import Modal from "@/components/common/modal/CommonModal";
 import { REGION_OPTIONS } from "@/constants/options";
 
-export default function ProfileRegisterPage() {
+export default function ProfileEditPage() {
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    region: "",
-    intro: "",
+    name: "김승우",
+    phone: "010-1234-4321",
+    region: "songpa",
+    intro: "열심히 일하겠습니다.",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,7 +26,7 @@ export default function ProfileRegisterPage() {
 
   return (
     <main className="flex-1 max-w-[60.25rem] mx-auto px-5 tablet:px-8 mt-[80px] mb-[100px]">
-      <h1 className="text-h2 text-black mb-[40px] text-left">내 프로필 등록</h1>
+      <h1 className="text-h2 text-black mb-[40px] text-left">내 프로필 수정</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -39,7 +39,6 @@ export default function ProfileRegisterPage() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="입력"
               className="border border-gray-20 rounded-md p-3 focus:outline-none"
             />
           </div>
@@ -50,7 +49,6 @@ export default function ProfileRegisterPage() {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              placeholder="입력"
               className="border border-gray-20 rounded-md p-3 focus:outline-none"
             />
           </div>
@@ -85,13 +83,13 @@ export default function ProfileRegisterPage() {
         </div>
 
         <Button type="submit" variant="primary" size="large" className="w-full tablet:w-[346px] h-[47px] mx-auto">
-          등록하기
+          수정 완료
         </Button>
       </form>
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <p className="text-lg font-semibold mb-6">등록이 완료되었습니다.</p>
+          <p className="text-lg font-semibold mb-6">수정이 완료되었습니다.</p>
           <Button
             variant="primary"
             size="medium"
