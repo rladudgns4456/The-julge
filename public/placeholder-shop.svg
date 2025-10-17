@@ -1,0 +1,34 @@
+<svg width="256" height="160" viewBox="0 0 256 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 -->
+  <rect width="256" height="160" fill="#F8F9FA"/>
+  
+  <!-- 음식점 아이콘 -->
+  <g transform="translate(128, 80)">
+    <!-- 접시 -->
+    <ellipse cx="0" cy="0" rx="40" ry="8" fill="#E9ECEF"/>
+    
+    <!-- 음식 -->
+    <circle cx="-12" cy="-5" r="8" fill="#FFA500"/>
+    <circle cx="8" cy="-3" r="6" fill="#FF6B35"/>
+    <circle cx="0" cy="-8" r="5" fill="#32CD32"/>
+    
+    <!-- 포크와 나이프 -->
+    <g transform="translate(-50, -20)">
+      <!-- 포크 -->
+      <rect x="0" y="0" width="2" height="20" fill="#6C757D"/>
+      <rect x="-2" y="0" width="6" height="3" fill="#6C757D"/>
+      <rect x="-1" y="3" width="1" height="3" fill="#6C757D"/>
+      <rect x="1" y="3" width="1" height="3" fill="#6C757D"/>
+      <rect x="3" y="3" width="1" height="3" fill="#6C757D"/>
+    </g>
+    
+    <g transform="translate(50, -20)">
+      <!-- 나이프 -->
+      <rect x="0" y="0" width="2" height="20" fill="#6C757D"/>
+      <path d="M0,0 L4,0 L4,5 L0,8 Z" fill="#6C757D"/>
+    </g>
+  </g>
+  
+  <!-- 텍스트 -->
+  <text x="128" y="120" text-anchor="middle" fill="#6C757D" font-family="Arial, sans-serif" font-size="14" font-weight="500">음식점 이미지</text>
+</svg>
