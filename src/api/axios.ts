@@ -9,7 +9,7 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestCo
  * - 프로덕션환경 (실제API): NEXT_PUBLIC_API_URL=https://bootcamp-api.codeit.kr/api/0-1/the-julge
  */
 const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://bootcamp-api.codeit.kr/api/0-1/the-julge",
   headers: {
     "Content-Type": "application/json",
   },
