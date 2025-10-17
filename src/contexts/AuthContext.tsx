@@ -1,5 +1,3 @@
-// TODO: 로그인 페이지 완성 후 실제 API 연동 추가 필요
-
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
