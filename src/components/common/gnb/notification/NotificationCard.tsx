@@ -77,7 +77,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, onCli
       onClick={() => onClick(notification)}
       className="flex flex-col gap-1 bg-white px-3 py-4 rounded-[5px] text-left border-solid border-[1px] border-gray-20"
     >
-      {!item.read && <div className={`w-[5px] h-[5px] ${dotColor} rounded-full`}></div>}
+      {!item.read && <div className={`w-[5px] h-[5px] ${dotColor} rounded-full`} />}
       <p className="text-body-2-regular">{highlightResult(message, item.result)}</p>
       <p className="text-caption text-gray-40">{formatTimestamp(item.createdAt)}</p>
     </button>

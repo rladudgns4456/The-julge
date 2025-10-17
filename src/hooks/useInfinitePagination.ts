@@ -16,7 +16,7 @@ interface UseInfinitePaginationOptions<T> {
   itemsPerPage?: number;
 }
 
-export const UseInfinitePagination = <T>({ fetchFunction, itemsPerPage = 10 }: UseInfinitePaginationOptions<T>) => {
+export const useInfinitePagination = <T>({ fetchFunction, itemsPerPage = 10 }: UseInfinitePaginationOptions<T>) => {
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
