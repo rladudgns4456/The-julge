@@ -12,46 +12,49 @@ interface ProfileData {
 
 export default function ProfileDetailPage() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!userId) {
+        alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+        return;
+      }
+
       try {
-        const res = await instance.get("/users/me");
+        const res = await instance.get(`/users/${userId}`);
         setProfile(res.data);
       } catch (err) {
         console.error("프로필 불러오기 실패:", err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchProfile();
-  }, []);
 
-  if (!profile) return <p className="text-center mt-10">불러오는 중...</p>;
+    fetchProfile();
+  }, [userId]);
+
+  if (loading) return <p className="text-center mt-10">불러오는 중...</p>;
+  if (!profile) return <p className="text-center mt-10">프로필 정보를 불러오지 못했습니다.</p>;
 
   return (
-    <main className="w-full max-w-[957px] mx-auto px-5 pt-[40px] pb-[120px]">
-      <h1 className="text-h2 font-bold mb-[24px]">내 프로필</h1>
+    <main
+      className="
+        w-full max-w-[957px] mx-auto
+        px-5 tablet:px-6
+        pt-[40px] pb-[120px]
+        min-h-screen
+      "
+    >
+      <h1 className="text-h2 font-bold mb-[40px]">내 프로필</h1>
 
-      <div className="bg-[#FFF1EE] rounded-[8px] p-[32px] shadow mb-[40px]">
-        <Field label="이름">{profile.name}</Field>
-        <Field label="연락처">{profile.phone}</Field>
-        <Field label="선호 지역">{profile.region}</Field>
-        <Field label="소개">{profile.intro}</Field>
+      <div className="border border-gray-10 rounded-[12px] bg-gray-0 p-[32px]">
+        <p className="text-body-1-semibold mb-2">이름: {profile.name}</p>
+        <p className="text-body-1-semibold mb-2">연락처: {profile.phone}</p>
+        <p className="text-body-1-semibold mb-2">선호 지역: {profile.region}</p>
+        <p className="text-body-1-regular">소개: {profile.intro}</p>
       </div>
     </main>
-  );
-}
-
-/* ✅ 타입 명시된 Field 컴포넌트 */
-type FieldProps = {
-  label: string;
-  children: React.ReactNode;
-};
-
-function Field({ label, children }: FieldProps) {
-  return (
-    <div className="mb-[12px]">
-      <p className="text-body-1-regular text-primary-20 mb-[4px]">{label}</p>
-      <p className="text-body-2 text-gray-70">{children}</p>
-    </div>
   );
 }

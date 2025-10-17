@@ -6,36 +6,32 @@ import Modal from "@/components/common/modal/CommonModal";
 import instance from "@/api/axios";
 import { REGION_OPTIONS } from "@/constants/options";
 
-// 🔸 폼 데이터 타입 정의
-interface ProfileForm {
-  name: string;
-  phone: string;
-  region: string;
-  intro: string;
-}
-
 export default function ProfileRegisterPage() {
-  const [form, setForm] = useState<ProfileForm>({
+  const [form, setForm] = useState({
     name: "",
     phone: "",
     region: "",
     intro: "",
   });
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userId = localStorage.getItem("userId");
 
-  // 🔸 공용 핸들러 (input/select/textarea)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // 🔸 등록 API 호출
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!userId) {
+      alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
     try {
-      const res = await instance.post("/users/me", form);
-      console.log("등록 성공:", res.data);
+      const res = await instance.put(`/users/${userId}`, form);
+      console.log("프로필 등록 성공:", res.data);
       setIsModalOpen(true);
     } catch (err) {
       console.error("프로필 등록 실패:", err);
@@ -49,6 +45,7 @@ export default function ProfileRegisterPage() {
         w-full max-w-[957px] mx-auto
         px-5 tablet:px-6
         pt-[40px] pb-[120px]
+        min-h-screen
       "
     >
       {/* 상단 타이틀 + 닫기 버튼 */}
@@ -56,10 +53,7 @@ export default function ProfileRegisterPage() {
         <h1 className="text-h2 text-black font-bold">내 프로필</h1>
         <button
           onClick={() => (window.location.href = "/profile")}
-          className="
-            absolute right-0 top-0
-            text-h2 text-gray-50 hover:text-black
-          "
+          className="absolute right-0 top-0 text-h2 text-gray-50 hover:text-black"
         >
           ✕
         </button>
@@ -74,7 +68,6 @@ export default function ProfileRegisterPage() {
       >
         {/* 이름/연락처/선호 지역 */}
         <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-3 gap-[24px]">
-          {/* 이름 */}
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">이름*</label>
             <input
@@ -82,15 +75,10 @@ export default function ProfileRegisterPage() {
               value={form.name}
               onChange={handleChange}
               placeholder="입력"
-              className="
-                border border-gray-20 rounded-[6px]
-                px-[16px] h-[52px]
-                focus:outline-none
-              "
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
             />
           </div>
 
-          {/* 연락처 */}
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">연락처*</label>
             <input
@@ -98,27 +86,17 @@ export default function ProfileRegisterPage() {
               value={form.phone}
               onChange={handleChange}
               placeholder="입력"
-              className="
-                border border-gray-20 rounded-[6px]
-                px-[16px] h-[52px]
-                focus:outline-none
-              "
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
             />
           </div>
 
-          {/* 선호 지역 */}
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">선호 지역</label>
             <select
               name="region"
               value={form.region}
               onChange={handleChange}
-              className="
-                border border-gray-20 rounded-[6px]
-                px-[16px] h-[52px]
-                bg-white
-                focus:outline-none
-              "
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] bg-white focus:outline-none"
             >
               <option value="">선택</option>
               {REGION_OPTIONS.map(r => (
@@ -138,16 +116,11 @@ export default function ProfileRegisterPage() {
             value={form.intro}
             onChange={handleChange}
             placeholder="입력"
-            className="
-              border border-gray-20 rounded-[6px]
-              w-full p-[16px] resize-none
-              h-[160px]
-              focus:outline-none
-            "
+            className="border border-gray-20 rounded-[6px] w-full p-[16px] resize-none h-[160px] focus:outline-none"
           />
         </div>
 
-        {/* 등록 버튼 */}
+        {/* 버튼 */}
         <div className="text-center">
           <Button type="submit" variant="primary" size="large" className="w-[240px] h-[47px] mx-auto">
             등록하기

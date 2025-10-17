@@ -11,19 +11,27 @@ export default function ProfilePage() {
   useEffect(() => {
     const checkProfile = async () => {
       try {
-        const res = await instance.get("/users/me");
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          setHasProfile(false);
+          return;
+        }
+
+        const res = await instance.get(`/users/${userId}`);
         setHasProfile(!!res.data);
-      } catch {
+      } catch (err) {
+        console.error("프로필 불러오기 실패:", err);
         setHasProfile(false);
       }
     };
+
     checkProfile();
   }, []);
 
   if (hasProfile === null) return <p className="text-center mt-10">프로필 정보를 불러오는 중...</p>;
 
   return (
-    <main className="w-full max-w-[957px] mx-auto px-5 pt-[24px] pb-[96px]">
+    <main className="min-h-screen w-full max-w-[957px] mx-auto px-5 pt-[24px] pb-[96px]">
       <h1 className="text-h2 font-bold mb-[16px]">내 프로필</h1>
 
       {hasProfile ? (

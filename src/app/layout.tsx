@@ -17,11 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex flex-col min-h-screen">
+      <body>
         <AuthProvider>
           <Header />
           <DevTool />
-          <main className="flex-grow">{children}</main>
+          {children}
           <Footer />
         </AuthProvider>
       </body>
