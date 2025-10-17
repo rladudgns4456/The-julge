@@ -1,78 +1,94 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Input from "@/components/common/input/Input";
 import Button from "@/components/common/button";
+import { useForm } from "@/hooks/useForm";
+import { BaseFormData } from "@/hooks/useFormData";
+import { BaseErrors } from "@/hooks/useFormValidation";
+import { AuthLoginApi } from "@/contexts/AuthLoginApi";
+import { User } from "@/types/user";
 
 export default function LoginUi() {
   const router = useRouter();
 
-  // 폼 상태 관리
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  // 전역 상태 관리
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // 에러 상태 관리
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
+  useEffect(() => {
+    const unsubscribe = AuthLoginApi.subscribe(user => {
+      setCurrentUser(user);
+    });
+
+    // 컴포넌트 마운트 시 저장된 사용자 정보 복원
+    AuthLoginApi.restoreUserFromStorage();
+
+    return unsubscribe;
+  }, []);
+
+  // 이미 로그인된 사용자가 있다면 프로필로 이동
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/profile");
+    }
+  }, [currentUser, router]);
+
+  // 통합 폼 관리
+  const {
+    formData,
+    errors,
+    handleInputChange: baseHandleInputChange,
+    validateLoginForm,
+  } = useForm<BaseFormData, BaseErrors>(
+    {
+      email: "",
+      password: "",
+    },
+    {
+      email: "",
+      password: "",
+    },
+  );
+
+  // 로그인 에러 메시지
+  const [loginError, setLoginError] = useState("");
 
   // 폼 입력
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    baseHandleInputChange(e);
 
-    // 에러 상태 초기화
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: "",
-      }));
+    // 에러 메시지 초기화
+    if (loginError) {
+      setLoginError("");
     }
   };
 
   // 폼 제출
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginError("");
+    // 공통 유효성 검사
+    if (!validateLoginForm()) return;
+    setIsLoading(true);
 
-    // 에러 상태 초기화
-    setErrors({ email: "", password: "" });
+    try {
+      // AuthLoginApi를 사용한 로그인
+      const result = await AuthLoginApi.executeLogin(formData.email, formData.password);
 
-    let hasError = false;
-
-    // 이메일 유효성 검사
-    if (!formData.email) {
-      setErrors(prev => ({ ...prev, email: "이메일을 입력해주세요." }));
-      hasError = true;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setErrors(prev => ({ ...prev, email: "이메일 형식으로 작성해 주세요." }));
-      hasError = true;
+      if (result.success) {
+        // 로그인 성공 - 전역 상태가 업데이트되어 useEffect에서 자동으로 프로필로 이동
+      } else {
+        setLoginError(result.message);
+      }
+    } catch (error) {
+      // 예상치 못한 에러
+      setLoginError("로그인 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
-
-    // 비밀번호 유효성 검사
-    if (!formData.password) {
-      setErrors(prev => ({ ...prev, password: "비밀번호를 입력해주세요." }));
-      hasError = true;
-    } else if (formData.password.length < 8) {
-      setErrors(prev => ({ ...prev, password: "8자 이상 입력해 주세요." }));
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    //API 연동하고 로그인 성공시 공고리스트 화면으로 넘기기
-    console.log("로그인 데이터:", formData);
-    alert("로그인 되었습니다");
-
-    // 메인 페이지 이동
-    router.push("/");
   };
 
   const handleSignupClick = () => {
@@ -107,8 +123,10 @@ export default function LoginUi() {
             onChange={handleInputChange}
           />
 
-          <Button type="submit" variant="primary" size="large" className="w-full">
-            로그인 하기
+          {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
+
+          <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>
+            {isLoading ? "로그인 중..." : "로그인 하기"}
           </Button>
         </form>
 

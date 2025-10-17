@@ -3,43 +3,36 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signupUser, SignupRequest } from "@/api/signup/SignupApi";
+import { useForm } from "@/hooks/useForm";
+import { SignupFormData } from "@/hooks/useFormData";
+import { SignupErrors } from "@/hooks/useFormValidation";
 
-// 각 상태 타입들
-export interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  userType: "employee" | "employer";
-}
-
-export interface Errors {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+// 각 상태 공통 타입
+export type FormData = SignupFormData;
+export type Errors = SignupErrors;
 
 export interface ModalState {
   isOpen: boolean;
   type: "duplicateEmail" | "success" | null;
 }
 
-// SignupLogic 커스텀 훅
 export const useSignupLogic = () => {
   const router = useRouter();
 
-  // 폼, 에러 관리
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    userType: "employee",
-  });
-
-  const [errors, setErrors] = useState<Errors>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  // 통합 폼 관리 훅
+  const { formData, errors, setFormData, handleInputChange, validateSignupForm } = useForm<FormData, Errors>(
+    {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      userType: "employee",
+    },
+    {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  );
 
   // 로딩, 모달 관리
   const [isLoading, setIsLoading] = useState(false);
@@ -48,33 +41,6 @@ export const useSignupLogic = () => {
     isOpen: false,
     type: null,
   });
-
-  // 폼 입력 핸들러
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // 에러 초기화
-    if (errors[name as keyof Errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-
-    // 이메일 검사 정규식
-    if (name === "email" && value) {
-      if (!/\S+@\S+\.\S+/.test(value)) {
-        setErrors(prev => ({
-          ...prev,
-          email: "이메일 형식으로 작성해 주세요.",
-        }));
-      }
-    }
-  };
 
   // 유저 타입 알바/사장
   const handleUserTypeChange = (type: "employee" | "employer") => {
@@ -92,7 +58,7 @@ export const useSignupLogic = () => {
   // 중복 이메일 모달
   const handleDuplicateEmailConfirm = () => {
     setModalState({ isOpen: false, type: null });
-    handleSubmitAfterDuplicateEmail();
+    void performSignup();
   };
 
   // 회원가입 성공 모달
@@ -101,41 +67,49 @@ export const useSignupLogic = () => {
     router.push("/login");
   };
 
-  // 중복모달 닫아도 회원가입 내용 남아있게
-  const handleSubmitAfterDuplicateEmail = async () => {
-    await performSignup();
-  };
-
   // 회원가입 실행 공통 함수
   const performSignup = async () => {
     setIsLoading(true);
 
     try {
-      // API 호출을 위한 데이터 준비
+      // API 호출데이터
       const signupData: SignupRequest = {
         email: formData.email,
         password: formData.password,
         type: formData.userType,
       };
 
-      // 회원가입 API 호출
+      // 회원가입 API
       await signupUser(signupData);
 
       // 성공 모달 표시
       setModalState({ isOpen: true, type: "success" });
-    } catch (error: any) {
-      // 에러 메시지
-      const errorMessage = error.message;
-      const [statusCode, message] = errorMessage.split(":");
+    } catch (error: unknown) {
+      let statusCode = "unknown";
+      let message = "알 수 없는 오류";
+
+      // 에러 타입 가드 및 메시지 파싱
+      if (error instanceof Error) {
+        if (error.message && error.message.includes(":")) {
+          const [parsedStatusCode, parsedMessage] = error.message.split(":");
+          statusCode = parsedStatusCode?.trim() || "unknown";
+          message = parsedMessage?.trim() || error.message;
+        } else {
+          message = error.message || "알 수 없는 오류";
+        }
+      } else if (typeof error === "string") {
+        message = error;
+      } else {
+        message = "예상치 못한 오류가 발생했습니다.";
+      }
 
       handleSignupError(statusCode, message);
     } finally {
-      // 로딩 상태 종료
       setIsLoading(false);
     }
   };
 
-  // 서버에서 에서 발생시
+  // 서버에러시
   const handleSignupError = (statusCode: string, message: string) => {
     switch (statusCode) {
       case "400":
@@ -162,46 +136,12 @@ export const useSignupLogic = () => {
     }
   };
 
-  // 브라우저에서 사용자가 입력하는 데이터 검사
-  const validateForm = (): boolean => {
-    // 에러 상태 초기화
-    setErrors({ email: "", password: "", confirmPassword: "" });
-
-    let hasError = false;
-
-    if (!formData.email) {
-      setErrors(prev => ({ ...prev, email: "이메일을 입력해주세요." }));
-      hasError = true;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setErrors(prev => ({ ...prev, email: "이메일 형식으로 작성해 주세요." }));
-      hasError = true;
-    }
-
-    if (!formData.password) {
-      setErrors(prev => ({ ...prev, password: "비밀번호를 입력해주세요." }));
-      hasError = true;
-    } else if (formData.password.length < 8) {
-      setErrors(prev => ({ ...prev, password: "8자 이상 입력해 주세요." }));
-      hasError = true;
-    }
-
-    if (!formData.confirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: "비밀번호 확인을 입력해주세요." }));
-      hasError = true;
-    } else if (formData.password !== formData.confirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: "비밀번호가 일치하지 않습니다." }));
-      hasError = true;
-    }
-
-    return !hasError;
-  };
-
   // 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // 폼 유효성 검사
-    if (!validateForm()) return;
+    if (!validateSignupForm()) return;
 
     // 회원가입 실행
     await performSignup();
