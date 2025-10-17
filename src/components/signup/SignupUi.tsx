@@ -4,7 +4,7 @@ import Image from "next/image";
 import Input from "@/components/common/input/Input";
 import Button from "@/components/common/button";
 import Modal from "@/components/common/modal/CommonModal";
-import { useSignupLogic } from "./SignupLogic";
+import { useSignupLogic } from "@/components/signup/useSignup";
 
 export default function SignupUi() {
   const {
@@ -78,7 +78,7 @@ export default function SignupUi() {
                   {formData.userType === "employee" ? (
                     <Image src="/check.svg" alt="체크됨" width={24} height={24} />
                   ) : (
-                    <div className="w-6 h-6 rounded-full border-2 border-gray-30"></div>
+                    <div className="w-6 h-6 rounded-full border-2 border-gray-30" />
                   )}
                 </div>
                 <span className="font-medium">알바님</span>
@@ -97,7 +97,7 @@ export default function SignupUi() {
                   {formData.userType === "employer" ? (
                     <Image src="/check.svg" alt="체크됨" width={24} height={24} />
                   ) : (
-                    <div className="w-6 h-6 rounded-full border-2 border-gray-30"></div>
+                    <div className="w-6 h-6 rounded-full border-2 border-gray-30" />
                   )}
                 </div>
                 <span className="font-medium">사장님</span>

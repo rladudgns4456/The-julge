@@ -1,8 +1,11 @@
 import React from "react";
-import { ApplicationTableProps } from "@/types/TablePropsTypes";
+import { ApplicationTableProps, ApplicationData } from "@/types/TablePropsTypes";
+
+// status에서 사용하는 타입만 가져와서 재정의 할 수 있도록 만듬
+type ApplicationStatus = ApplicationData["status"];
 
 const CommonTableArba: React.FC<ApplicationTableProps> = ({ data }) => {
-  const getStatusStyle = (status: string) => {
+  const getStatusStyle = (status: ApplicationStatus) => {
     switch (status) {
       case "approved":
         return "bg-blue-10 text-blue-20 px-3 py-1 rounded-full text-sm font-medium";
@@ -10,12 +13,10 @@ const CommonTableArba: React.FC<ApplicationTableProps> = ({ data }) => {
         return "bg-red-10 text-red-40 px-3 py-1 rounded-full text-sm font-medium";
       case "pending":
         return "bg-green-10 text-green-20 px-3 py-1 rounded-full text-sm font-medium";
-      default:
-        return "bg-gray-10 text-gray-50 px-3 py-1 rounded-full text-sm font-medium";
     }
   };
-
-  const getStatusText = (status: string) => {
+  //string타입에서 각 case에 맞는 값들만 반환 (string보다 엄격)
+  const getStatusText = (status: ApplicationStatus) => {
     switch (status) {
       case "approved":
         return "승인 완료";
@@ -23,8 +24,6 @@ const CommonTableArba: React.FC<ApplicationTableProps> = ({ data }) => {
         return "거절";
       case "pending":
         return "대기중";
-      default:
-        return status;
     }
   };
 
