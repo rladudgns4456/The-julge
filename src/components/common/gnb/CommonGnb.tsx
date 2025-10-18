@@ -6,7 +6,7 @@ import EmployeeMenu from "@/components/common/gnb/EmployeeMenu";
 import EmployerMenu from "@/components/common/gnb/EmployerMenu";
 
 export default function CommonGnb() {
-  const { user, userType } = useAuth();
+  const { user } = useAuth();
 
   // 게스트 (비로그인)
   if (!user) {
@@ -14,12 +14,12 @@ export default function CommonGnb() {
   }
 
   // 알바 유저
-  if (userType === "employee") {
+  if (user.type === "employee") {
     return <EmployeeMenu />;
   }
 
   // 사장 유저
-  if (userType === "employer") {
+  if (user.type === "employer") {
     return <EmployerMenu />;
   }
   return null;
