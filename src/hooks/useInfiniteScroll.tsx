@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 /**
  *
  * @param callback - 스크롤 끝에 도달했을 때 실행할 함수
- * @param hasMore - 다음 데이터 확인
+ * @param hasNext - 다음 데이터 확인
  * @param isLoading - 로딩 상태 확인
  * @param rootMargin - 얼마나 미리 감지할지
  *
@@ -12,7 +12,7 @@ import { useEffect, useRef } from "react";
 
 interface useInfiniteScrollOptions {
   callback: () => void;
-  hasMore: boolean;
+  hasNext: boolean;
   isLoading: boolean;
   rootMargin?: string;
   threshold?: number;
@@ -20,7 +20,7 @@ interface useInfiniteScrollOptions {
 
 export const useInfiniteScroll = ({
   callback,
-  hasMore,
+  hasNext,
   isLoading,
   rootMargin = "50px",
   threshold = 0.1,
@@ -29,7 +29,7 @@ export const useInfiniteScroll = ({
   const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isLoading || !hasMore) {
+    if (isLoading || !hasNext) {
       return;
     }
 
@@ -58,7 +58,7 @@ export const useInfiniteScroll = ({
         observerRef.current.disconnect();
       }
     };
-  }, [callback, hasMore, isLoading, rootMargin, threshold]);
+  }, [callback, hasNext, isLoading, rootMargin, threshold]);
 
   return { triggerRef };
 };

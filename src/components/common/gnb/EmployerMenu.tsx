@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logout from "./Logout";
+import Logout from "@/components/common/gnb/Logout";
 
 const EmployerMenu = () => {
   return (

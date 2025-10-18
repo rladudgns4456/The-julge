@@ -1,6 +1,6 @@
 import Link from "next/link";
-import NotificationButton from "./notification/NotificationButton";
-import Logout from "./Logout";
+import NotificationButton from "@/components/common/gnb//notification/NotificationButton";
+import Logout from "@/components/common/gnb//Logout";
 
 const EmployeeMenu = () => {
   return (

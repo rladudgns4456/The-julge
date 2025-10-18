@@ -28,7 +28,6 @@ export const useAuth = () => {
 
   return {
     user,
-    userType: user?.type ?? null,
     login,
     logout,
     isLoading,
