@@ -1,5 +1,5 @@
 import instance from "@/api/axios";
-import { handleApiError } from "../error/ErrorHandler";
+import { handleApiError } from "@/api/error/ErrorHandler";
 import { ShopRequest, ShopResponse } from "@/types/shop";
 
 // POST '/shops' - 가게 등록

@@ -1,7 +1,6 @@
 import instance from "@/api/axios";
-import { AxiosError } from "axios";
 import { GetNoticesResponse, GetShopNoticesResponse, NoticeBodyRequst, NoticeShopInfo } from "@/types/notice";
-import { handleApiError } from "../error/ErrorHandler";
+import { handleApiError } from "@/api/error/ErrorHandler";
 
 export const getNotices = async (query?: {
   offset?: number;
