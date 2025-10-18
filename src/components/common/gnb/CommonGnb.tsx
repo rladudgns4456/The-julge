@@ -1,9 +1,9 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import GuestMenu from "./GuestMenu";
-import EmployeeMenu from "./EmployeeMenu";
-import EmployerMenu from "./EmployerMenu";
+import GuestMenu from "@/components/common/gnb/GuestMenu";
+import EmployeeMenu from "@/components/common/gnb/EmployeeMenu";
+import EmployerMenu from "@/components/common/gnb/EmployerMenu";
 
 export default function CommonGnb() {
   const { user, userType } = useAuth();
