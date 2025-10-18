@@ -20,7 +20,7 @@ export type { PostCardProps, PostData };
 const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   // 기존 시급 대비 시급 인상률 계산
   const getPayIncreaseRate = (): number => {
-    if (!post.shop.originalHourlyPay) return 0;
+    if (!post.shop?.originalHourlyPay || !post.hourlyPay) return 0;
     return Math.round(((post.hourlyPay - post.shop.originalHourlyPay) / post.shop.originalHourlyPay) * 100);
   };
 
@@ -63,8 +63,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
     >
       <div className="relative h-[120px] sm:h-[160px] bg-gray-10 mx-3 sm:mx-4 mt-3 sm:mt-0 rounded-[12px]">
         <Image
-          src={post.shop.imageUrl || "/placeholder-shop.svg"}
-          alt={post.shop.name}
+          src={post.shop?.imageUrl || "/placeholder-shop.svg"}
+          alt={post.shop?.name || "가게 이미지"}
           fill
           className="object-cover rounded-[12px]"
           sizes="(max-width: 640px) 171px, 312px"
@@ -78,7 +78,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
 
       <div className="p-3 sm:p-4 flex flex-col">
         <h3 className={`font-bold truncate text-body-1-bold sm:text-[20px] sm:leading-[100%] ${colorStyle.primary}`}>
-          {post.shop.name}
+          {post.shop?.name}
         </h3>
 
         <div className={`flex items-center gap-1 mt-1 sm:mt-2 ${colorStyle.text}`}>
@@ -105,12 +105,12 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
             height={20}
             className="flex-shrink-0 w-[20px] h-[20px]"
           />
-          <span className="truncate text-caption sm:text-body-2-regular">{post.shop.address1}</span>
+          <span className="truncate text-caption sm:text-body-2-regular">{post.shop?.address1}</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 mt-4">
           <span className={`font-bold text-[18px] leading-[100%] sm:text-h2 ${colorStyle.primary}`}>
-            {post.hourlyPay.toLocaleString()}원
+            {post.hourlyPay?.toLocaleString() || "0"}원
           </span>
 
           {payIncreaseRate > 0 && !isClosed && (

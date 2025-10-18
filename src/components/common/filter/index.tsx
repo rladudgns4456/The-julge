@@ -8,7 +8,6 @@ import Input from "@/components/common/input/Input";
 import { REGION_OPTIONS } from "@/constants/options";
 import { useFilter } from "@/hooks/useFilter";
 import { FilterOptions, DetailFilterProps } from "@/types/filter";
-import { formatDateToString } from "@/utils/date";
 import "react-datepicker/dist/react-datepicker.css";
 
 // 필터 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
@@ -40,12 +39,7 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
   const { filters, handleFilterChange, handleLocationToggle, resetFilters } = useFilter(initialFilters);
 
   const handleApply = () => {
-    // API 전송을 위해 Date를 string으로 변환
-    const apiFilters = {
-      ...filters,
-      startDate: filters.startDate ? formatDateToString(filters.startDate) : undefined,
-    };
-    onApply(apiFilters as any); // 임시로 any 사용, 나중에 API 타입 정의 시 수정
+    onApply(filters);
     onClose();
   };
 
@@ -119,8 +113,7 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
             )}
           </div>
 
-          {/* 구분선 */}
-          <div className="border-t border-gray-20"></div>
+          <div className="border-t border-gray-20" />
 
           <div>
             <label htmlFor="startDate" className="block text-body-2-regular text-black mb-1">
@@ -130,7 +123,7 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
               <DatePicker
                 id="startDate"
                 selected={filters.startDate}
-                onChange={(date: Date | null) => handleFilterChange("startDate", date || new Date())}
+                onChange={(date: Date | null) => handleFilterChange("startDate", date ?? undefined)}
                 dateFormat="yyyy-MM-dd"
                 className="w-full h-12 px-3 py-2 border border-gray-30 rounded-md text-body-2-regular text-black focus:outline-none focus:ring-2 focus:ring-primary-20 focus:border-transparent"
                 placeholderText="날짜를 선택하세요"
@@ -140,8 +133,7 @@ const DetailFilter: React.FC<DetailFilterProps> = ({ isOpen, onClose, onApply, o
             </div>
           </div>
 
-          {/* 구분선 */}
-          <div className="border-t border-gray-20"></div>
+          <div className="border-t border-gray-20" />
 
           <div>
             <label htmlFor="hourlyWageMin" className="block text-body-2-regular text-black mb-1">
