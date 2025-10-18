@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Button from "../common/button";
 import { Shop } from "@/types/user";
 
@@ -10,15 +10,6 @@ interface ShopInfoProps {
 }
 
 export const ShopInfo = ({ shop }: ShopInfoProps) => {
-  const router = useRouter();
-
-  const handleEdit = () => {
-    router.push(`/owner/edit-shop/${shop.item.id}`);
-  };
-
-  const handleRegisterNotice = () => {
-    router.push("/owner/register-notice");
-  };
   return (
     <section className="w-full max-w-[964px] my-[60px] mx-auto bg-white">
       <div className=" w-full">
@@ -56,14 +47,18 @@ export const ShopInfo = ({ shop }: ShopInfoProps) => {
             {/* 버튼 */}
             <div className="w-full flex gap-2">
               <div className="w-full">
-                <Button variant="outlined" className=" w-full" size="large" onClick={handleEdit}>
-                  편집하기
-                </Button>
+                <Link href={`/owner/edit-shop/${shop.item.id}`}>
+                  <Button variant="outlined" className=" w-full" size="large">
+                    편집하기
+                  </Button>
+                </Link>
               </div>
               <div className="w-full">
-                <Button variant="primary" className=" w-full" size="large" onClick={handleRegisterNotice}>
-                  공고 등록하기
-                </Button>
+                <Link href={"/owner/register-notice"}>
+                  <Button variant="primary" className=" w-full" size="large">
+                    공고 등록하기
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
