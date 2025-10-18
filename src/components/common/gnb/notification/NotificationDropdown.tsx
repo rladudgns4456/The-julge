@@ -11,12 +11,12 @@ interface DropdownProps {
 
 const NotificationDropDown = ({ onClose }: DropdownProps) => {
   const router = useRouter();
-  const { notifications, error, isLoading, isLoadingMore, hasMore, markAsRead, loadMore } = useNotifications();
+  const { notifications, error, isLoading, hasNext, markAsRead, loadMore } = useNotifications();
 
   const { triggerRef } = useInfiniteScroll({
     callback: loadMore,
-    hasMore,
-    isLoading: isLoadingMore,
+    hasNext,
+    isLoading: isLoading,
     rootMargin: "10px",
   });
 

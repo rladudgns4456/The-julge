@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import instance from "@/api/axios";
 import { useAuth } from "@/hooks/useAuth";
-import { NotificationItem, NotificationListResponse } from "@/types/notification";
+import { NotificationItem } from "@/types/notification";
 import { useInfinitePagination } from "@/hooks/useInfinitePagination";
+import { getAlerts, putAlerts } from "@/api/alert/AlertsApi";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_LIMIT = 10;
 
 export const useNotifications = () => {
   const { user } = useAuth();
@@ -17,12 +17,10 @@ export const useNotifications = () => {
         return { items: [], hasNext: false };
       }
 
-      const response = await instance.get<NotificationListResponse>(
-        `/users/${user.id}/alerts?offset=${offset}&limit=${limit}`,
-      );
+      const response = await getAlerts(user.id, offset, limit);
       return {
-        items: response.data.items,
-        hasNext: response.data.hasNext,
+        items: response.items,
+        hasNext: response.hasNext,
       };
     },
     [user],
@@ -32,16 +30,14 @@ export const useNotifications = () => {
   const {
     items: notifications,
     isLoading,
-    isLoadingMore,
-    hasMore,
+    hasNext,
     error,
-    loadInitial,
     loadMore,
     refresh,
     reset,
   } = useInfinitePagination<NotificationItem>({
     fetchFunction: fetchNotifications,
-    itemsPerPage: ITEMS_PER_PAGE,
+    limit: ITEMS_LIMIT,
   });
 
   // 읽지 않은 알림 개수 계산
@@ -64,11 +60,7 @@ export const useNotifications = () => {
       }
 
       try {
-        const updatedNotifications = notifications.map(notif =>
-          notif.item.id === alertsId ? { ...notif, item: { ...notif.item, read: true } } : notif,
-        );
-
-        await instance.put(`/users/${user.id}/alerts/${alertsId}`);
+        await putAlerts(user.id, alertsId);
 
         refresh();
       } catch (err) {
@@ -81,7 +73,7 @@ export const useNotifications = () => {
 
   useEffect(() => {
     if (user) {
-      loadInitial();
+      refresh();
     } else {
       reset();
       setUnreadCount(0);
@@ -92,8 +84,7 @@ export const useNotifications = () => {
     notifications,
     unreadCount,
     isLoading,
-    isLoadingMore,
-    hasMore,
+    hasNext,
     error,
     loadMore,
     refresh,
