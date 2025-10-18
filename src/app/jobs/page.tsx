@@ -10,6 +10,7 @@ import Button from "@/components/common/button";
 import { SORT_OPTIONS } from "@/constants/options";
 import { convertFilterOptionsToApiParams } from "@/types/filter";
 import { parsePostsResponse } from "@/utils/api";
+import { isPostClosed } from "@/utils/post";
 import axios from "@/api/axios";
 
 const ITEMS_PER_PAGE = 9;
@@ -34,13 +35,6 @@ export default function JobPostsPage() {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  // 마감된 공고 판별 함수
-  const isPostClosed = (post: PostData) => {
-    const startDate = new Date(post.startsAt);
-    const isExpired = new Date() > startDate;
-    return post.closed || isExpired;
-  };
 
   const fetchPosts = async (page: number = 1, filters: FilterOptions = {}, sort: string = "time") => {
     setLoading(true);
@@ -75,7 +69,7 @@ export default function JobPostsPage() {
       const response = await axios.get(url);
       console.log("API 응답:", response.data);
 
-      let allPosts = parsePostsResponse(response.data);
+      const allPosts = parsePostsResponse(response.data);
 
       // 활성 공고를 앞에, 마감 공고를 뒤에 배치
       const activePosts = allPosts.filter((p: PostData) => !isPostClosed(p));
@@ -186,9 +180,7 @@ export default function JobPostsPage() {
           ) : posts.length === 0 ? (
             <div className="col-span-full text-center py-8">공고가 없습니다.</div>
           ) : (
-            (isMobile ? posts.slice(0, 8) : posts).map(post => (
-              <PostCard key={post.id} post={post} onClick={handlePostClick} />
-            ))
+            posts.map(post => <PostCard key={post.id} post={post} onClick={handlePostClick} />)
           )}
         </div>
 
