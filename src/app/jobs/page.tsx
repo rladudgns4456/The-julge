@@ -24,17 +24,8 @@ export default function JobPostsPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   const router = useRouter();
-
-  // 화면 크기 감지
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const fetchPosts = async (page: number = 1, filters: FilterOptions = {}, sort: string = "time") => {
     setLoading(true);
@@ -64,10 +55,8 @@ export default function JobPostsPage() {
       params.append("sort", sort);
 
       const url = `/notices?${params.toString()}`;
-      console.log("API 요청 URL:", url);
 
       const response = await axios.get(url);
-      console.log("API 응답:", response.data);
 
       const allPosts = parsePostsResponse(response.data);
 
@@ -84,11 +73,6 @@ export default function JobPostsPage() {
       setPosts(pageItems);
       setTotalItems(response.data.count || sortedAllPosts.length);
     } catch (err) {
-      console.error("API 에러:", err);
-      if (err instanceof Error && "response" in err) {
-        console.error("에러 응답 데이터:", (err as any).response?.data);
-        console.error("에러 상태 코드:", (err as any).response?.status);
-      }
       setError("공고를 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
