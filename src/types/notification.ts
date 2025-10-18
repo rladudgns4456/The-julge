@@ -1,36 +1,24 @@
-import { Shop } from "./user";
+import { ShopItem } from "./shop";
+import { Notice } from "./notice";
 
 export interface Application {
-  item: {
-    id: string;
-    status: "pending" | "accepted" | "rejected";
-  };
-  href: string;
+  id: string;
+  status: "pending" | "accepted" | "rejected";
 }
 
-export interface Notice {
-  item: {
-    id: string;
-    hourlyPay: number; //  시급
-    description: string; // 공고 설명
-    startsAt: string; // 근무 시작 시간
-    workhour: number; // 근무 시간
-    closed: boolean; //마감 여부
-  };
+export interface ApplicationInfo {
+  item: Application;
   href: string;
 }
 
 export interface NotificationItem {
-  item: {
-    id: string;
-    createdAt: string; // 생성 시간
-    result: "accepted" | "rejected"; // 지원 결과
-    read: boolean; // 읽음 여부
-    application: Application; // 지원서 정보
-    shop: Shop; // 가게 정보
-    notice: Notice; // 공고 정보
-  };
-  links: unknown[];
+  id: string;
+  createdAt: string; // 생성 시간
+  result: "accepted" | "rejected"; // 지원 결과
+  read: boolean; // 읽음 여부
+  application: Application; // 지원서 정보
+  shop: ShopItem; // 가게 정보
+  notice: Notice; // 공고 정보
 }
 
 // 알림 목록 조회
