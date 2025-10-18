@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import GuestMenu from "./GuestMenu";
 import EmployeeMenu from "./EmployeeMenu";
 import EmployerMenu from "./EmployerMenu";

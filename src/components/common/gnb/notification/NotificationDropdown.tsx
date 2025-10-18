@@ -1,14 +1,24 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useNotifications } from "@/hooks/useNotifications";
 import { NotificationItem } from "@/types/notification";
-import NotificationCard from "./NotificationCard";
+import NotificationCard from "@/components/common/gnb/notification/NotificationCard";
 
 interface DropdownProps {
   onClose: () => void;
 }
 
 const NotificationDropDown = ({ onClose }: DropdownProps) => {
-  const { notifications, error, isLoading, markAsRead } = useNotifications();
+  const router = useRouter();
+  const { notifications, error, isLoading, isLoadingMore, hasMore, markAsRead, loadMore } = useNotifications();
+
+  const { triggerRef } = useInfiniteScroll({
+    callback: loadMore,
+    hasMore,
+    isLoading: isLoadingMore,
+    rootMargin: "10px",
+  });
 
   const handleNotificationClick = async (notification: NotificationItem) => {
     if (!notification.item.read) {
@@ -18,7 +28,7 @@ const NotificationDropDown = ({ onClose }: DropdownProps) => {
         throw new Error("읽은 알림을 처리하는데 실패했습니다.");
       }
     }
-    window.location.href = notification.item.notice.href;
+    router.push(notification.item.notice.href);
 
     onClose();
   };
@@ -31,26 +41,35 @@ const NotificationDropDown = ({ onClose }: DropdownProps) => {
           <Image src="/close.svg" alt="닫기 아이콘" width={24} height={24} />
         </button>
       </div>
+      {/* 알림 목록 */}
       <div className="mobile:flex-1 w-full h-full flex flex-col gap-2 tablet:max-h-[419px] desktop:max-h-[419px] overflow-y-auto">
-        {isLoading ? null : error ? (
-          // 알림 오류
+        {isLoading ? (
+          /* 알림 로딩 */
+          <div className="px-3 py-4 text-center">
+            <p className="text-body-2-regular text-gray-40">알림을 불러오는 중...</p>
+          </div>
+        ) : error ? (
+          /* 알림 에러 */
           <div className="px-3 py-4 text-center">
             <p className="text-body-2-regular text-gray-40">알림을 불러오는 중 오류가 발생했습니다.</p>
           </div>
-        ) : // 알림 없음
-        notifications.length === 0 ? (
+        ) : notifications.length === 0 ? (
+          /* 알림 없음 */
           <div className="px-3 py-4 text-center">
             <p className="text-body-2-regular text-gray-40">새로운 알림이 없습니다.</p>
           </div>
         ) : (
-          // 알림 있음
-          notifications.map(notification => (
-            <NotificationCard
-              key={notification.item.id}
-              notification={notification}
-              onClick={handleNotificationClick}
-            />
-          ))
+          /* 알림 목록 */
+          <>
+            {notifications.map(notification => (
+              <NotificationCard
+                key={notification.item.id}
+                notification={notification}
+                onClick={handleNotificationClick}
+              />
+            ))}
+            <div ref={triggerRef} />
+          </>
         )}
       </div>
     </div>
