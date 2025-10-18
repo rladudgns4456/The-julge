@@ -1,20 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/common/button";
 import Modal from "@/components/common/modal/CommonModal";
 import instance from "@/api/axios";
 import { REGION_OPTIONS } from "@/constants/options";
 
-export default function ProfileRegisterPage() {
-  const [form, setForm] = useState({
+interface ProfileForm {
+  name: string;
+  phone: string;
+  region: string;
+  intro: string;
+}
+
+export default function ProfileEditPage() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [form, setForm] = useState<ProfileForm>({
     name: "",
     phone: "",
     region: "",
     intro: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const userId = localStorage.getItem("userId");
+
+  // ✅ userId 안전하게 불러오기
+  useEffect(() => {
+    const id = localStorage.getItem("userId");
+    setUserId(id);
+  }, []);
+
+  // ✅ 기존 프로필 불러오기
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userId) return;
+      try {
+        const res = await instance.get(`/users/${userId}`);
+        setForm(res.data);
+      } catch (err) {
+        console.error("프로필 조회 실패:", err);
+      }
+    };
+    fetchProfile();
+  }, [userId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -23,7 +50,6 @@ export default function ProfileRegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!userId) {
       alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
       return;
@@ -31,11 +57,11 @@ export default function ProfileRegisterPage() {
 
     try {
       const res = await instance.put(`/users/${userId}`, form);
-      console.log("프로필 등록 성공:", res.data);
+      console.log("프로필 수정 성공:", res.data);
       setIsModalOpen(true);
     } catch (err) {
-      console.error("프로필 등록 실패:", err);
-      alert("등록에 실패했습니다. 다시 시도해주세요.");
+      console.error("프로필 수정 실패:", err);
+      alert("수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -48,25 +74,17 @@ export default function ProfileRegisterPage() {
         min-h-screen
       "
     >
-      {/* 상단 타이틀 + 닫기 버튼 */}
       <div className="relative mb-[40px]">
-        <h1 className="text-h2 text-black font-bold">내 프로필</h1>
+        <h1 className="text-h2 text-black font-bold">내 프로필 수정</h1>
         <button
-          onClick={() => (window.location.href = "/profile")}
+          onClick={() => (window.location.href = "/profile/detail")}
           className="absolute right-0 top-0 text-h2 text-gray-50 hover:text-black"
         >
           ✕
         </button>
       </div>
 
-      {/* 입력 폼 */}
-      <form
-        onSubmit={handleSubmit}
-        className="
-          flex flex-col gap-[32px]
-        "
-      >
-        {/* 이름/연락처/선호 지역 */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
         <div className="grid grid-cols-1 tablet:grid-cols-3 desktop:grid-cols-3 gap-[24px]">
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">이름*</label>
@@ -108,7 +126,6 @@ export default function ProfileRegisterPage() {
           </div>
         </div>
 
-        {/* 소개 */}
         <div>
           <label className="text-body-1-regular text-black mb-[8px] block">소개</label>
           <textarea
@@ -120,18 +137,16 @@ export default function ProfileRegisterPage() {
           />
         </div>
 
-        {/* 버튼 */}
         <div className="text-center">
           <Button type="submit" variant="primary" size="large" className="w-[240px] h-[47px] mx-auto">
-            등록하기
+            수정 완료
           </Button>
         </div>
       </form>
 
-      {/* 등록 완료 모달 */}
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <p className="text-lg font-semibold mb-6">등록이 완료되었습니다.</p>
+          <p className="text-lg font-semibold mb-6">프로필 수정이 완료되었습니다.</p>
           <Button
             variant="primary"
             size="medium"
