@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { PostCardProps, PostData } from "@/types/post";
 import { formatTime, formatDate } from "@/utils/date";
-import { isPostClosed as checkPostClosed } from "@/utils/post";
+import { isPostClosed } from "@/utils/post";
 
 // 포스트 관련 타입들을 re-export (컴포넌트 사용 시 편의성을 위해)
 export type { PostCardProps, PostData };
@@ -28,10 +28,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   // Date 객체 생성
   const startDate = new Date(post.startsAt);
   const endDate = new Date(startDate.getTime() + post.workhour * 60 * 60 * 1000);
-  const currentDate = new Date();
 
   // 시간 기반 마감 여부 확인
-  const isClosed = checkPostClosed(post);
+  const isClosed = isPostClosed(post);
 
   // 색상 스타일 객체
   const COLOR_STYLES = {
