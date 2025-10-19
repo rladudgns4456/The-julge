@@ -54,9 +54,9 @@ instance.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // 토큰 만료 시 자동 로그아웃
+      // 토큰 만료 시 자동 로그아웃 및 모달 표시
       AuthLoginApi.executeLogout();
-      // 필요시 로그인 페이지로 리다이렉트
+      // 토큰 만료 모달 표시는 AuthLoginApi.executeLogout()에서 처리
     }
     return Promise.reject(error);
   },
