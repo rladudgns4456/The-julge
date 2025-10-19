@@ -123,7 +123,6 @@ export class AuthLoginApi {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("tokenExpiration"); //토큰 만료시간도 초기화
     localStorage.removeItem("user");
-    localStorage.removeItem("mockUserType"); //목데이터 관련된 것도 일단 로그아웃하면 데이터 초기화
     this.notifyListeners(null);
   }
 }
