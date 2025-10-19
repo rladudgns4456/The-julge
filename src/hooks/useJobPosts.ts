@@ -10,6 +10,7 @@ import { convertFilterOptionsToApiParams } from "@/types/filter";
 import { parsePostsResponse } from "@/utils/api";
 import { isPostClosed } from "@/utils/post";
 import axios from "@/api/axios";
+import { getNotices } from "../api/notices/NoticesApi";
 import { SORT_OPTIONS } from "@/constants/options";
 
 const ITEMS_PER_PAGE = 9;
@@ -85,18 +86,8 @@ export const useJobPosts = () => {
 
       setProfileIncomplete(false);
 
-      const params = new URLSearchParams();
-      params.append("offset", "0");
-      params.append("limit", "100");
-
-      if (region) {
-        params.append("address", region);
-      }
-
-      params.append("sort", "time");
-
-      const response = await axios.get(`/notices?${params.toString()}`);
-      const allPosts = parsePostsResponse(response.data);
+      const responseData = await getNotices({ offset: 0, limit: 100, address: region, sort: "time" });
+      const allPosts = parsePostsResponse(responseData);
       const activePosts = getActivePosts(allPosts);
 
       setRecommendedPosts(activePosts.slice(0, RECOMMENDED_POSTS_LIMIT));
@@ -136,8 +127,15 @@ export const useJobPosts = () => {
 
       params.append("sort", sort);
 
-      const response = await axios.get(`/notices?${params.toString()}`);
-      const allPosts = parsePostsResponse(response.data);
+      const responseData = await getNotices({
+        offset: 0,
+        limit: 100,
+        address: apiParams.address,
+        startsAtGte: apiParams.startsAtGte,
+        hourlyPayGte: apiParams.hourlyPayGte,
+        sort,
+      });
+      const allPosts = parsePostsResponse(responseData);
 
       // 한 번의 순회로 active/closed 분류
       const { activePosts, closedPosts } = allPosts.reduce(
@@ -157,7 +155,7 @@ export const useJobPosts = () => {
       const pageItems = sortedAllPosts.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
       setPosts(pageItems);
-      setTotalItems(response.data.count || sortedAllPosts.length);
+      setTotalItems(responseData?.count || sortedAllPosts.length);
     } catch (err) {
       console.error("공고 조회 실패:", err);
       setError("공고를 불러오는데 실패했습니다.");
