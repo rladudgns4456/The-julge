@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import NotificationDropdown from "./NotificationDropdown";
+import NotificationDropdown from "@/components/common/gnb/notification/NotificationDropdown";
 import { useNotifications } from "@/hooks/useNotifications";
 
 const NotificationButton = () => {

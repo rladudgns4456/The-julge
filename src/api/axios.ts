@@ -20,12 +20,13 @@ const instance: AxiosInstance = axios.create({
  * 요청 인터셉터: 토큰 자동 추가 및 만료 검증
  * 모든 API 요청에 accessToken을 자동으로 Authorization 헤더에 추가
  * 토큰이 만료되었으면 자동으로 로그아웃 처리
- * 단, 로그인/회원가입 API는 토큰 검증 제외
+ * 단, 로그인/회원가입 API 및 공고 목록 조회는 토큰 검증 제외
  */
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 로그인/회원가입 API는 토큰 검증 제외
-    const isAuthEndpoint = config.url?.includes("/token") || config.url?.includes("/users");
+    // 로그인/회원가입 API 및 공고 목록 조회는 토큰 검증 제외
+    const isAuthEndpoint =
+      config.url?.includes("/token") || config.url?.includes("/users") || config.url?.includes("/notices");
 
     if (!isAuthEndpoint) {
       // 토큰 유효시간 체크

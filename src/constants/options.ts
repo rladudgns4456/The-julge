@@ -41,8 +41,8 @@ export const CATEGORY_OPTIONS = [
 
 // 정렬 선택지
 export const SORT_OPTIONS = [
-  { label: "마감임박순", value: "deadline" },
-  { label: "시급많은순", value: "highWage" },
-  { label: "가나다순", value: "alphabet" },
-  { label: "최신등록순", value: "recent" },
+  { label: "마감임박순", value: "time" },
+  { label: "시급많은순", value: "pay" },
+  { label: "시간적은순", value: "hour" },
+  { label: "가나다순", value: "shop" },
 ];

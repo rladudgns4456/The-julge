@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Search from "@/components/common/gnb/Search";
-import CommonGnb from "../gnb/CommonGnb";
+import CommonGnb from "@/components/common/gnb/CommonGnb";
 
 export default function Header() {
   return (

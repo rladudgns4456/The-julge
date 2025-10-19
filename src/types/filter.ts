@@ -6,12 +6,19 @@ export interface FilterOptions {
   startDate?: Date; // 시작일 (Date 객체)
 }
 
+// API 변환은 별도 함수로
+export const convertFilterOptionsToApiParams = (filters: FilterOptions) => ({
+  address: filters.location,
+  hourlyPayGte: filters.hourlyWageMin,
+  startsAtGte: filters.startDate ? new Date(filters.startDate.getTime() + 9 * 60 * 60 * 1000).toISOString() : undefined,
+});
+
 // 필터 컴포넌트 Props 인터페이스
 
 export interface DetailFilterProps {
   isOpen: boolean; // 필터 열림 상태
   onClose: () => void; // 필터 닫기 함수
-  onApply: (filters: FilterOptions) => void; // 필터 적용 함수
+  onApply: (filters: FilterOptions) => void; // 필터 적용 함수 (UI 타입)
   onReset: () => void; // 필터 초기화 함수
   initialFilters?: FilterOptions; // 초기 필터 값
 }

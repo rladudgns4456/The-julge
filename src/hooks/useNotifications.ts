@@ -1,46 +1,51 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { NotificationItem } from "@/types/notification";
-import { getMockNotificationResponse } from "@/lib/MockNotif";
+import { useInfinitePagination } from "@/hooks/useInfinitePagination";
+import { getAlerts, putAlerts } from "@/api/alert/AlertsApi";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+const ITEMS_LIMIT = 10;
 
 export const useNotifications = () => {
   const { user } = useAuth();
-
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
 
   //   알림 목록 조회
-  const fetchNotifications = async () => {
-    if (!user) {
-      setNotifications([]);
-      setUnreadCount(0);
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      if (USE_MOCK) {
-        const mockData = getMockNotificationResponse();
-        setNotifications(mockData.items);
-        // 읽지 않은 알림 개수
-        const unread = mockData.items.filter(n => !n.item.read).length;
-        setUnreadCount(unread);
-
-        setIsLoading(false);
-        return;
+  const fetchNotifications = useCallback(
+    async (offset: number, limit: number) => {
+      if (!user) {
+        return { items: [], hasNext: false };
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "알림을 불러오는데 실패했습니다.";
-      setError(new Error(errorMessage));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+      const response = await getAlerts(user.id, offset, limit);
+      return {
+        items: response.items,
+        hasNext: response.hasNext,
+      };
+    },
+    [user],
+  );
+
+  // 무한 페이지네이션 훅
+  const {
+    items: notifications,
+    isLoading,
+    hasNext,
+    error,
+    loadMore,
+    refresh,
+    reset,
+  } = useInfinitePagination<NotificationItem>({
+    fetchFunction: fetchNotifications,
+    limit: ITEMS_LIMIT,
+  });
+
+  // 읽지 않은 알림 개수 계산
+
+  useEffect(() => {
+    const unread = notifications.filter(n => !n.item.read).length;
+    setUnreadCount(unread);
+  }, [notifications]);
 
   /**
    * 알림 읽음 처리
@@ -48,36 +53,40 @@ export const useNotifications = () => {
    * @param alertsId - 읽음 처리할 알림 ID
    */
 
-  const markAsRead = async (alertsId: string) => {
-    try {
-      setNotifications(prev =>
-        prev.map(notif => (notif.item.id === alertsId ? { ...notif, item: { ...notif.item, read: true } } : notif)),
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
-      return;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "읽음 처리에 실패했습니다.";
-      throw new Error(errorMessage);
-    }
-  };
+  const markAsRead = useCallback(
+    async (alertsId: string) => {
+      if (!user) {
+        throw new Error("로그인이 필요합니다.");
+      }
 
-  // 새로고침
-  const refresh = () => {
-    fetchNotifications();
-  };
+      try {
+        await putAlerts(user.id, alertsId);
 
-  // 초기 로드
+        refresh();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "읽음 처리에 실패했습니다.";
+        throw new Error(errorMessage);
+      }
+    },
+    [user, refresh],
+  );
+
   useEffect(() => {
     if (user) {
-      fetchNotifications();
+      refresh();
+    } else {
+      reset();
+      setUnreadCount(0);
     }
-  }, [user]);
+  }, [user?.id]);
 
   return {
     notifications,
     unreadCount,
     isLoading,
+    hasNext,
     error,
+    loadMore,
     refresh,
     markAsRead,
   };
