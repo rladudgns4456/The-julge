@@ -129,7 +129,7 @@ export default function SignupUi() {
               다른 이메일로 다시 시도해주세요.
             </p>
             <div className="flex gap-2 pt-2">
-              <Button variant="gray" size="medium" className="flex-1" onClick={handleModalClose}>
+              <Button variant="primary" size="medium" className="flex-1" onClick={handleModalClose}>
                 닫기
               </Button>
             </div>
