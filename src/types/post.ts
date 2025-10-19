@@ -18,4 +18,5 @@ export interface PostData {
 export interface PostCardProps {
   post: PostData;
   onClick?: (post: PostData) => void;
+  className?: string;
 }
