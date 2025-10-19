@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { User } from "@/types/user";
 import { FilterOptions } from "@/types/filter";
 import { PostData } from "@/types/post";
 import { convertFilterOptionsToApiParams } from "@/types/filter";
@@ -26,6 +27,7 @@ export const useJobPosts = () => {
   const [recommendedPosts, setRecommendedPosts] = useState<PostData[]>([]);
   const [recLoading, setRecLoading] = useState(false);
   const [recError, setRecError] = useState<string | null>(null);
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   const { user } = useAuth();
@@ -51,6 +53,7 @@ export const useJobPosts = () => {
       setUserLoggedIn(false);
       setRecommendedPosts([]);
       setRecError(null);
+      setProfileIncomplete(false);
       return;
     }
 
@@ -59,13 +62,28 @@ export const useJobPosts = () => {
     setRecError(null);
 
     try {
-      const userId = (user as any).id || (user as any).userId || (user as any).memberId;
+      // useAuth의 user는 User | null 타입
+      const typedUser = user as User | null;
+
+      const userId = typedUser?.id;
 
       if (!userId) {
-        throw new Error("사용자 ID를 찾을 수 없습니다.");
+        // 로그인은 되어 있으나 id를 찾을 수 없으면 프로필 미완성 상태로 처리
+        setRecommendedPosts([]);
+        setProfileIncomplete(true);
+        return;
       }
 
       const region = await getUserRegion(userId);
+
+      // 사용자의 지역 정보가 없으면 맞춤 공고를 보여주지 않고 프로필 미완성으로 처리
+      if (!region) {
+        setRecommendedPosts([]);
+        setProfileIncomplete(true);
+        return;
+      }
+
+      setProfileIncomplete(false);
 
       const params = new URLSearchParams();
       params.append("offset", "0");
@@ -201,6 +219,7 @@ export const useJobPosts = () => {
     recommendedPosts,
     recLoading,
     recError,
+    profileIncomplete,
     userLoggedIn,
     handleSortChange,
     handleFilterClick,
