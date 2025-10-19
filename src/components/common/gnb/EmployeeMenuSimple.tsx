@@ -1,15 +1,13 @@
 import Link from "next/link";
 import Logout from "@/components/common/gnb/Logout";
-import NotificationButton from "@/components/common/gnb/notification/NotificationButton";
 
-const EmployerMenu = () => {
+const EmployeeMenuSimple = () => {
   return (
     <nav className="flex items-center gap-10 tablet:gap-3 mobile:gap-4 text-body-1-bold mobile:text-body-2-bold">
-      <Link href="/owner">내 가게</Link>
+      <Link href="/profile">내 프로필</Link>
       <Logout />
-      <NotificationButton />
     </nav>
   );
 };
 
-export default EmployerMenu;
+export default EmployeeMenuSimple;

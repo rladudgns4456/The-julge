@@ -1,32 +1,13 @@
-'use client';
-
 import Link from "next/link";
 import Image from "next/image";
 import Search from "@/components/common/gnb/Search";
-import CommonGnb from "@/components/common/gnb/CommonGnb";
-import { usePathname } from "next/navigation";
-import OwnerHeader from "@/components/common/header/OwnerHeader";
-import ProfileHeader from "@/components/common/header/ProfileHeader";
+import EmployerMenu from "@/components/common/gnb/EmployerMenu";
 
-export default function Header() {
-  const pathname = usePathname();
-
-  // 오너 폴더 경로(`/owner`)에서는 별도 헤더 사용
-  if (pathname?.startsWith("/owner")) {
-    const logoHref = pathname === "/owner/negage" ? "/jobs" : "/";
-    return <OwnerHeader logoHref={logoHref} />;
-  }
-
-  // 프로필 등록 페이지(`/profile/register`)에서는 간소 헤더 사용 (내 프로필·로그아웃)
-  if (pathname === "/profile/register") {
-    return <ProfileHeader />;
-  }
-
-  // 기본 헤더
+export default function OwnerHeader({ logoHref = "/" }: { logoHref?: string }) {
   return (
     <header className="w-full h-[4.375rem] mobile:h-[102px] bg-white mobile:flex mobile:flex-col  tablet:px-8 mobile:px-5">
       <div className="max-w-5xl mx-auto mobile:mx-0 h-full flex gap-10 tablet:gap-8 items-center mobile:justify-between">
-        <Link href="/">
+        <Link href={logoHref}>
           <Image
             src="/logo.svg"
             alt="더 줄게 로고"
@@ -44,8 +25,8 @@ export default function Header() {
         <div className="mobile:hidden tablet:block flex-1">
           <Search />
         </div>
-        {/* GNB */}
-        <CommonGnb />
+        {/* 오너 전용 메뉴: 내 가게 · 로그아웃 · 알림 아이콘 */}
+        <EmployerMenu />
       </div>
       {/* 모바일 검색창 */}
       <div className="mb-2.5 mobile:block tablet:hidden desktop:hidden flex-1">
