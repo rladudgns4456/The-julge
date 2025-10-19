@@ -70,7 +70,7 @@ export const postShopNotice = async (shopId: string, body: NoticeBodyRequst): Pr
 export const getShopNotice = async (shopId: string, noticeId: string): Promise<GetShopNoticesResponse> => {
   try {
     const response = await instance.get<GetShopNoticesResponse>(`
-            /shops/${shopId}/notices?${noticeId}`);
+            /shops/${shopId}/notices/${noticeId}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
