@@ -1,5 +1,5 @@
-import { ShopItem } from "./shop";
-import { Notice } from "./notice";
+import { ShopItem } from "@/types/shop";
+import { Notice } from "@/types/notice";
 
 export interface Application {
   id: string;

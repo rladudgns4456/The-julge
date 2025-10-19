@@ -1,6 +1,6 @@
 import { REGION_OPTIONS, CATEGORY_OPTIONS } from "@/constants/options";
-import { User } from "./user";
-import { LinkInfo } from "./links";
+import { User } from "@/types/user";
+import { LinkInfo } from "@/types/links";
 
 export interface ShopItem {
   id: string;

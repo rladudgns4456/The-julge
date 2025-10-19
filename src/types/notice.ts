@@ -1,6 +1,6 @@
-import { ShopInfomation } from "./shop";
-import { Application } from "./notification";
-import { LinkInfo } from "./links";
+import { ShopInfomation } from "@/types/shop";
+import { Application } from "@/types/notification";
+import { LinkInfo } from "@/types/links";
 
 export interface Notice {
   id: string;

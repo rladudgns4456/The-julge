@@ -1,5 +1,5 @@
-import instance from "../axios";
-import { handleApiError } from "../error/ErrorHandler";
+import instance from "@/api/axios";
+import { handleApiError } from "@/api/error/ErrorHandler";
 import { NotificationListResponse, NotificationReadResponse } from "@/types/notification";
 
 interface ErrorMessage {
