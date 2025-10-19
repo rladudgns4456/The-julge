@@ -1,7 +1,6 @@
 import instance from "@/api/axios";
-import { AxiosError } from "axios";
 import { GetNoticesResponse, GetShopNoticesResponse, NoticeBodyRequst, NoticeShopInfo } from "@/types/notice";
-import { handleApiError } from "../error/ErrorHandler";
+import { handleApiError } from "@/api/error/ErrorHandler";
 
 export const getNotices = async (query?: {
   offset?: number;
@@ -70,7 +69,7 @@ export const postShopNotice = async (shopId: string, body: NoticeBodyRequst): Pr
 export const getShopNotice = async (shopId: string, noticeId: string): Promise<GetShopNoticesResponse> => {
   try {
     const response = await instance.get<GetShopNoticesResponse>(`
-            /shops/${shopId}/notices?${noticeId}`);
+            /shops/${shopId}/notices/${noticeId}`);
     return response.data;
   } catch (error) {
     return handleApiError(error);
