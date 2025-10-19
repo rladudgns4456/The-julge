@@ -22,7 +22,7 @@ export const NoticeList = ({ notices, hasNext, isLoading, loadMore }: NoticeList
   });
 
   const handleNoticeClick = (notice: PostData) => {
-    router.push(`/owner/notice/${notice.id}`);
+    router.push(`/owner/notice/${notice.shop.id}/${notice.id}`);
   };
 
   return (
