@@ -18,7 +18,7 @@ export type { PostCardProps, PostData };
  *
  */
 
-const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, onClick, className }) => {
   // 기존 시급 대비 시급 인상률 계산
   const getPayIncreaseRate = (): number => {
     if (!post.shop?.originalHourlyPay || !post.hourlyPay) return 0;
@@ -57,7 +57,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
     <div
       className={`bg-white rounded-[12px] overflow-hidden shadow-sm border border-gray-20 min-w-[171px] h-[261px] sm:w-full sm:h-[349px] flex flex-col justify-center ${
         onClick && !isClosed ? "cursor-pointer hover:shadow-md transition-shadow" : ""
-      }`}
+      } ${className || ""}`}
       onClick={handleCardClick}
     >
       <div className="relative h-[120px] sm:h-[160px] bg-gray-10 mx-3 sm:mx-4 mt-3 sm:mt-0 rounded-[12px]">
