@@ -113,24 +113,12 @@ export const useSignupLogic = () => {
   const handleSignupError = (statusCode: string, message: string) => {
     switch (statusCode) {
       case "400":
-        console.warn(`잘못된 요청 형식: ${message}`, {
-          email: formData.email,
-          action: "showing_input_error_alert",
-        });
         alert("입력 정보를 다시 확인해주세요.");
         break;
       case "409":
-        console.info(`중복 이메일 시도: ${formData.email}`, {
-          action: "showing_duplicate_email_modal",
-        });
         setModalState({ isOpen: true, type: "duplicateEmail" });
         break;
       default:
-        console.error("예상치 못한 회원가입 에러:", {
-          statusCode,
-          message,
-          email: formData.email,
-        });
         alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
         break;
     }

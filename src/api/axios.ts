@@ -4,13 +4,10 @@ import { AuthLoginApi } from "@/contexts/AuthLoginApi";
 /*
  * Axios 인스턴스 생성
  * 환경변수 NEXT_PUBLIC_API_URL을 사용하여 유연한 API URL 관리
- *
- * 사용법:
- * - 개발환경 (목데이터): NEXT_PUBLIC_API_URL=http://localhost:3000/api
- * - 프로덕션환경 (실제API): NEXT_PUBLIC_API_URL=https://bootcamp-api.codeit.kr/api/18-1/the-julge
  */
+
 const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://bootcamp-api.codeit.kr/api/18-1/the-julge",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,11 +17,10 @@ const instance: AxiosInstance = axios.create({
  * 요청 인터셉터: 토큰 자동 추가 및 만료 검증
  * 모든 API 요청에 accessToken을 자동으로 Authorization 헤더에 추가
  * 토큰이 만료되었으면 자동으로 로그아웃 처리
- * 단, 로그인/회원가입 API 및 공고 목록 조회는 토큰 검증 제외
  */
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // 로그인/회원가입 API 및 공고 목록 조회는 토큰 검증 제외
+    // 토근검증 제외
     const isAuthEndpoint =
       config.url?.includes("/token") || config.url?.includes("/users") || config.url?.includes("/notices");
 

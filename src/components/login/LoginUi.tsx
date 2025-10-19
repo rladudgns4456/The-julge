@@ -32,7 +32,7 @@ export default function LoginUi() {
   // 이미 로그인된 사용자가 있다면 프로필로 이동
   useEffect(() => {
     if (currentUser) {
-      router.push("/profile");
+      router.push("/jobs");
     }
   }, [currentUser, router]);
 
