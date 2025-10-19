@@ -8,7 +8,7 @@ import { useJobPosts } from "@/hooks/useJobPosts";
 
 const ITEMS_PER_PAGE = 9;
 
-export default function Page() {
+export default function JobPostsPage() {
   const {
     sortOption,
     currentPage,
