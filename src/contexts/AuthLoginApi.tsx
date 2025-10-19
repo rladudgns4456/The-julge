@@ -2,6 +2,7 @@
 
 import { User, LoginResponse } from "@/types/user";
 import { loginUser } from "@/api/login/LoginApi";
+import { AuthLoginModal } from "@/contexts/AuthLoginModal";
 
 // 상태 변경 리스너 타입
 type AuthStateListener = (user: User | null) => void;
@@ -48,6 +49,7 @@ export class AuthLoginApi {
     // 만료 시간 이후 토큰 무효
     if (now > expirationTime) {
       this.executeLogout();
+      AuthLoginModal.showTokenExpiredModal();
       return false;
     }
     return true;
@@ -71,6 +73,7 @@ export class AuthLoginApi {
 
         localStorage.setItem("accessToken", token);
         localStorage.setItem("tokenExpiration", expirationTime.toString());
+        localStorage.setItem("userId", userData.item.id); //내 프로필 수정시 사용할 것
         localStorage.setItem("user", JSON.stringify(userData.item));
         this.notifyListeners(userData.item);
 
@@ -92,7 +95,6 @@ export class AuthLoginApi {
       };
     }
   }
-  // 저장된 토큰으로 사용자 정보 복원
   static restoreUserFromStorage(): User | null {
     // 토큰 유효시간 체크
     if (!this.isTokenValid()) {
@@ -110,7 +112,6 @@ export class AuthLoginApi {
         this.notifyListeners(user);
         return user;
       } catch (error) {
-        // 잘못된 데이터 정리
         this.executeLogout();
         return null;
       }
@@ -122,8 +123,13 @@ export class AuthLoginApi {
   static executeLogout(): void {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("tokenExpiration"); //토큰 만료시간도 초기화
+    localStorage.removeItem("userId");
     localStorage.removeItem("user");
-    localStorage.removeItem("mockUserType"); //목데이터 관련된 것도 일단 로그아웃하면 데이터 초기화
     this.notifyListeners(null);
+
+    // 토큰 만료로 인한 로그아웃 체크
+    if (this.currentUser) {
+      AuthLoginModal.showTokenExpiredModal();
+    }
   }
 }
