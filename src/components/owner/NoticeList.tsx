@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { PostData } from "@/types/post";
-import PostCard from "../common/post/PostCard";
+import PostCard from "@/components/common/post/PostCard";
 
 interface NoticeListProps {
   notices: PostData[];
