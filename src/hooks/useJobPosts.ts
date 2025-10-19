@@ -109,57 +109,63 @@ export const useJobPosts = () => {
     }
   }, [user, getUserRegion, getActivePosts]);
 
-  const fetchPosts = useCallback(
-    async (page: number = 1, filters: FilterOptions = {}, sort: string = "time") => {
-      setLoading(true);
-      setError(null);
+  const fetchPosts = useCallback(async (page: number = 1, filters: FilterOptions = {}, sort: string = "time") => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const params = new URLSearchParams();
-        params.append("offset", "0");
-        params.append("limit", "100");
+    try {
+      const params = new URLSearchParams();
+      params.append("offset", "0");
+      params.append("limit", "100");
 
-        const apiParams = convertFilterOptionsToApiParams(filters);
+      const apiParams = convertFilterOptionsToApiParams(filters);
 
-        if (apiParams.address?.length) {
-          apiParams.address.forEach(location => {
-            params.append("address", location);
-          });
-        }
-
-        if (apiParams.startsAtGte) {
-          params.append("startsAtGte", apiParams.startsAtGte);
-        }
-
-        if (apiParams.hourlyPayGte) {
-          params.append("hourlyPayGte", String(apiParams.hourlyPayGte));
-        }
-
-        params.append("sort", sort);
-
-        const response = await axios.get(`/notices?${params.toString()}`);
-        const allPosts = parsePostsResponse(response.data);
-
-        const activePosts = getActivePosts(allPosts);
-        const closedPosts = allPosts.filter((p: PostData) => isPostClosed(p));
-        const sortedAllPosts = [...activePosts, ...closedPosts];
-
-        const startIdx = (page - 1) * ITEMS_PER_PAGE;
-        const endIdx = startIdx + ITEMS_PER_PAGE;
-        const pageItems = sortedAllPosts.slice(startIdx, endIdx);
-
-        setPosts(pageItems);
-        setTotalItems(response.data.count || sortedAllPosts.length);
-      } catch (err) {
-        console.error("공고 조회 실패:", err);
-        setError("공고를 불러오는데 실패했습니다.");
-        setPosts([]);
-      } finally {
-        setLoading(false);
+      if (apiParams.address?.length) {
+        apiParams.address.forEach(location => {
+          params.append("address", location);
+        });
       }
-    },
-    [getActivePosts],
-  );
+
+      if (apiParams.startsAtGte) {
+        params.append("startsAtGte", apiParams.startsAtGte);
+      }
+
+      if (apiParams.hourlyPayGte) {
+        params.append("hourlyPayGte", String(apiParams.hourlyPayGte));
+      }
+
+      params.append("sort", sort);
+
+      const response = await axios.get(`/notices?${params.toString()}`);
+      const allPosts = parsePostsResponse(response.data);
+
+      // 한 번의 순회로 active/closed 분류
+      const { activePosts, closedPosts } = allPosts.reduce(
+        (acc, post) => {
+          if (isPostClosed(post)) {
+            acc.closedPosts.push(post);
+          } else {
+            acc.activePosts.push(post);
+          }
+          return acc;
+        },
+        { activePosts: [] as PostData[], closedPosts: [] as PostData[] },
+      );
+
+      const sortedAllPosts = [...activePosts, ...closedPosts];
+
+      const pageItems = sortedAllPosts.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+      setPosts(pageItems);
+      setTotalItems(response.data.count || sortedAllPosts.length);
+    } catch (err) {
+      console.error("공고 조회 실패:", err);
+      setError("공고를 불러오는데 실패했습니다.");
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchRecommendedPosts();
