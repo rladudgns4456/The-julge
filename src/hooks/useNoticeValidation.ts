@@ -66,8 +66,8 @@ export const validateWorkhour = (value: string): string => {
     return "근무 시간은 0보다 커야 합니다.";
   }
 
-  if (workhour > 24) {
-    return "근무 시간은 24시간을 초과할 수 없습니다.";
+  if (workhour > 12) {
+    return "근무 시간은 12시간을 초과할 수 없습니다.";
   }
 
   return "";
