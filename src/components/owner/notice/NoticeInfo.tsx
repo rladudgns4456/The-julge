@@ -3,16 +3,14 @@ import Link from "next/link";
 import Button from "@/components/common/button";
 import { formatDate, formatTime } from "@/utils/date";
 import { NoticeDetailItem } from "@/types/notice";
-import { UserType } from "@/types/user";
 
 interface NoticeInfoProps {
   noticeDetail: NoticeDetailItem;
-  userRole?: UserType;
   onClick?: () => void;
 }
 
-export const NoticeInfo = ({ noticeDetail, userRole = "employer", onClick }: NoticeInfoProps) => {
-  const { shop, hourlyPay, startsAt, workhour, description, closed } = noticeDetail;
+export const NoticeInfo = ({ noticeDetail, onClick }: NoticeInfoProps) => {
+  const { shop, hourlyPay, startsAt, workhour, description, id } = noticeDetail;
 
   // 숫자를 통화 형식으로 포멧팅
   const formatCurrency = (amoubt: number): string => {
@@ -94,9 +92,9 @@ export const NoticeInfo = ({ noticeDetail, userRole = "employer", onClick }: Not
             {/* 버튼 */}
             <div className="w-full flex gap-2">
               <div className="w-full">
-                <Link href={`/owner/edit-shop/${shop.item.id}`}>
-                  <Button variant="outlined" className=" w-full" size="large">
-                    편집하기
+                <Link href={`/owner/register-notice?mode=edit&shopId=${shop.item.id}&noticeId=${id}`}>
+                  <Button variant="outlined" className=" w-full" size="large" disabled={closed}>
+                    {closed ? "마감 완료" : "편집하기"}
                   </Button>
                 </Link>
               </div>
@@ -108,7 +106,7 @@ export const NoticeInfo = ({ noticeDetail, userRole = "employer", onClick }: Not
       {/* 공고 설명 */}
       <div className="w-full bg-gray-10 mt-6 p-8 rounded-xl">
         <span className="text-body-1-bold text-black mb-3">공고 설명</span>
-        <p className="text-body-1-regular line-clamp-3">{shop.item.description}</p>
+        <p className="text-body-1-regular line-clamp-3">{description}</p>
       </div>
     </div>
   );
