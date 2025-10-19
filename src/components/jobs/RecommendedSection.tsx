@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
 import PostCard from "@/components/common/post/PostCard";
 import Button from "@/components/common/button";
 import { PostData } from "@/types/post";
@@ -8,6 +11,7 @@ interface RecommendedSectionProps {
   recLoading: boolean;
   recError: string | null;
   recommendedPosts: PostData[];
+  profileIncomplete?: boolean;
   onPostClick: (post: PostData) => void;
   onLoginClick: () => void;
   onRetry: () => void;
@@ -18,17 +22,32 @@ const RecommendedSection: React.FC<RecommendedSectionProps> = ({
   recLoading,
   recError,
   recommendedPosts,
+  profileIncomplete,
   onPostClick,
   onLoginClick,
   onRetry,
 }) => {
+  const router = useRouter();
   return (
     <div className="mb-9 bg-red-10">
-      {userLoggedIn ? (
-        <div className="max-w-[994px] mx-auto px-4 py-8">
-          <h1 className="text-h1 font-bold text-black mb-8">맞춤 공고</h1>
-
-          {recLoading ? (
+      <div className="max-w-[994px] mx-auto px-4 py-8">
+        <h1 className="text-h1 font-bold text-black mb-8">맞춤 공고</h1>
+        {userLoggedIn ? (
+          profileIncomplete ? (
+            <div className="p-8 bg-white rounded-lg text-center border border-gray-20 shadow-sm">
+              <p className="text-body-1-regular text-gray-50 mb-6">
+                프로필 정보가 없어 맞춤 공고를 불러올 수 없습니다. 프로필을 작성해 주세요.
+              </p>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => router.push("/profile")}
+                className="w-[50%] m-0 mx-auto"
+              >
+                작성하러 가기
+              </Button>
+            </div>
+          ) : recLoading ? (
             <div className="flex justify-center items-center py-12">
               <div className="text-center">
                 <div className="w-8 h-8 border-4 border-gray-30 border-t-primary-20 rounded-full animate-spin mx-auto mb-2"></div>
@@ -38,8 +57,8 @@ const RecommendedSection: React.FC<RecommendedSectionProps> = ({
           ) : recError ? (
             <div className="p-6 bg-white rounded-lg text-center border border-gray-20">
               <p className="text-body-2-regular text-gray-50 mb-4">{recError}</p>
-              <Button variant="outlined" size="medium" onClick={onRetry} className="w-fit">
-                다시 시도
+              <Button variant="primary" size="medium" onClick={onRetry} className="w-[50%] m-0 mx-auto">
+                다시시도
               </Button>
             </div>
           ) : recommendedPosts.length === 0 ? (
@@ -54,11 +73,8 @@ const RecommendedSection: React.FC<RecommendedSectionProps> = ({
                 ))}
               </div>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="max-w-[994px] mx-auto px-4 py-8">
-          <h1 className="text-h1 font-bold text-black mb-8">맞춤 공고</h1>
+          )
+        ) : (
           <div className="p-8 bg-white rounded-lg text-center border border-gray-20 shadow-sm">
             <p className="text-body-1-regular text-gray-50 mb-6">
               로그인하고 당신의 지역에 맞춤형 공고를 확인해보세요!
@@ -67,8 +83,8 @@ const RecommendedSection: React.FC<RecommendedSectionProps> = ({
               로그인하기
             </Button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
