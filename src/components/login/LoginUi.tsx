@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Input from "@/components/common/input/Input";
 import Button from "@/components/common/button";
+import Modal from "@/components/common/modal/CommonModal";
 import { useForm } from "@/hooks/useForm";
 import { BaseFormData } from "@/hooks/useFormData";
 import { BaseErrors } from "@/hooks/useFormValidation";
@@ -18,6 +19,10 @@ export default function LoginUi() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 모달 상태 관리
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
   useEffect(() => {
     const unsubscribe = AuthLoginApi.subscribe(user => {
       setCurrentUser(user);
@@ -29,7 +34,7 @@ export default function LoginUi() {
     return unsubscribe;
   }, []);
 
-  // 이미 로그인된 사용자가 있다면 프로필로 이동
+  // 로그인 되어있는 상태면 공고리스트로 이동시켜
   useEffect(() => {
     if (currentUser) {
       router.push("/jobs");
@@ -53,39 +58,46 @@ export default function LoginUi() {
     },
   );
 
-  // 로그인 에러 메시지
-  const [loginError, setLoginError] = useState("");
+  // 모달 닫기 함수
+  const handleModalClose = () => {
+    setShowModal(false);
+    setModalMessage("");
+  };
 
   // 폼 입력
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     baseHandleInputChange(e);
 
-    // 에러 메시지 초기화
-    if (loginError) {
-      setLoginError("");
+    // 모달이 열려있다면 닫기
+    if (showModal) {
+      setShowModal(false);
     }
   };
 
   // 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError("");
+
+    if (showModal) {
+      setShowModal(false);
+    }
+
     // 공통 유효성 검사
     if (!validateLoginForm()) return;
     setIsLoading(true);
 
     try {
-      // AuthLoginApi를 사용한 로그인
       const result = await AuthLoginApi.executeLogin(formData.email, formData.password);
 
       if (result.success) {
-        // 로그인 성공 - 전역 상태가 업데이트되어 useEffect에서 자동으로 프로필로 이동
       } else {
-        setLoginError(result.message);
+        // 에러 메시지 모달
+        setModalMessage(result.message);
+        setShowModal(true);
       }
     } catch (error) {
-      // 예상치 못한 에러
-      setLoginError("로그인 중 오류가 발생했습니다.");
+      setModalMessage("로그인 중 오류가 발생했습니다.");
+      setShowModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -123,8 +135,6 @@ export default function LoginUi() {
             onChange={handleInputChange}
           />
 
-          {loginError && <div className="text-red-500 text-sm text-center">{loginError}</div>}
-
           <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>
             {isLoading ? "로그인 중..." : "로그인 하기"}
           </Button>
@@ -140,6 +150,17 @@ export default function LoginUi() {
           </button>
         </div>
       </div>
+
+      {showModal && (
+        <Modal onClose={handleModalClose}>
+          <div className="space-y-4">
+            <p className="text-black">{modalMessage}</p>
+            <Button onClick={handleModalClose} variant="primary" size="medium" className="w-full">
+              확인
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

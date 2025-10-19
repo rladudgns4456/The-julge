@@ -3,7 +3,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useUserData } from "@/hooks/useUserData";
 import { useNoticeData } from "@/hooks/useNoticeData";
-
 import { EmptyShop } from "@/components/owner/EmptyShop";
 import { ShopInfo } from "@/components/owner/ShopInfo";
 import { EmptyNotice } from "@/components/owner/EmptyNotice";
