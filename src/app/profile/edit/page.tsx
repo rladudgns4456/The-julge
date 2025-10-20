@@ -11,14 +11,12 @@ import { getProfile, updateProfile } from "@/api/profile/profileApi";
 export default function ProfileEditPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", phone: "", region: "", intro: "" });
-  const [userId, setUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ 로그인된 사용자 정보 확인 및 프로필 불러오기
   useEffect(() => {
     const user = AuthLoginApi.getCurrentUser() ?? AuthLoginApi.restoreUserFromStorage();
-
     if (!user?.id) {
       alert("로그인이 필요합니다.");
       router.push("/login");
@@ -38,8 +36,8 @@ export default function ProfileEditPage() {
         region: profile.address || "",
         intro: profile.bio || "",
       });
-    } catch (error) {
-      console.error("❌ 프로필 불러오기 실패:", error);
+    } catch (err) {
+      console.error("❌ 프로필 불러오기 실패:", err);
       alert("프로필 정보를 불러올 수 없습니다.");
       router.push("/profile/detail");
     } finally {
@@ -47,13 +45,11 @@ export default function ProfileEditPage() {
     }
   };
 
-  // ✅ 입력 값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  // ✅ 수정 요청
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) return alert("로그인 정보가 없습니다.");
@@ -62,7 +58,7 @@ export default function ProfileEditPage() {
       await updateProfile(userId, form);
       setIsModalOpen(true);
     } catch (err) {
-      console.error("❌ 프로필 수정 실패:", err);
+      console.error("❌ 수정 실패:", err);
       alert("수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
@@ -70,9 +66,10 @@ export default function ProfileEditPage() {
   if (loading) return <p className="text-center mt-10">불러오는 중...</p>;
 
   return (
-    <main className="max-w-[957px] mx-auto px-5 pt-[40px] pb-[120px]">
+    <main className="w-full max-w-[957px] mx-auto px-5 tablet:px-6 pt-[40px] pb-[120px] min-h-screen">
+      {/* 헤더 */}
       <div className="relative mb-[40px]">
-        <h1 className="text-h2 font-bold text-black">내 프로필 수정</h1>
+        <h1 className="text-h2 text-black font-bold">내 프로필 수정</h1>
         <button
           onClick={() => router.push("/profile/detail")}
           className="absolute right-0 top-0 text-h2 text-gray-50 hover:text-black"
@@ -81,37 +78,38 @@ export default function ProfileEditPage() {
         </button>
       </div>
 
+      {/* 폼 */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-[24px]">
-          <div>
-            <label className="text-body-1-regular text-black mb-[8px] block">이름*</label>
+          <div className="flex flex-col">
+            <label className="text-body-1-regular text-black mb-[8px]">이름*</label>
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="입력"
-              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none w-full"
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="text-body-1-regular text-black mb-[8px] block">연락처*</label>
+          <div className="flex flex-col">
+            <label className="text-body-1-regular text-black mb-[8px]">연락처*</label>
             <input
               name="phone"
               value={form.phone}
               onChange={handleChange}
               placeholder="입력"
-              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none w-full"
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
             />
           </div>
 
-          <div>
-            <label className="text-body-1-regular text-black mb-[8px] block">선호 지역</label>
+          <div className="flex flex-col">
+            <label className="text-body-1-regular text-black mb-[8px]">선호 지역</label>
             <select
               name="region"
               value={form.region}
               onChange={handleChange}
-              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] bg-white focus:outline-none w-full"
+              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] bg-white focus:outline-none"
             >
               <option value="">선택</option>
               {REGION_OPTIONS.map(r => (
