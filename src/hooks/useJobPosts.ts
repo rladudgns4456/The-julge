@@ -10,14 +10,14 @@ import { convertFilterOptionsToApiParams } from "@/types/filter";
 import { parsePostsResponse } from "@/utils/api";
 import { isPostClosed } from "@/utils/post";
 import axios from "@/api/axios";
-import { getNotices } from "../api/notices/NoticesApi";
+import { getNotices, SortOption } from "@/api/notice/NoticeApi";
 import { SORT_OPTIONS } from "@/constants/options";
 
 const ITEMS_PER_PAGE = 9;
 const RECOMMENDED_POSTS_LIMIT = 3;
 
 export const useJobPosts = () => {
-  const [sortOption, setSortOption] = useState(SORT_OPTIONS[0].value);
+  const [sortOption, setSortOption] = useState<SortOption>(SORT_OPTIONS[0].value as SortOption);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterOptions>({});
@@ -32,13 +32,14 @@ export const useJobPosts = () => {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   const { user } = useAuth();
+  const userType = user?.type ?? null;
   const router = useRouter();
 
   const getUserRegion = useCallback(async (userId: string): Promise<string> => {
     try {
       const userRes = await axios.get(`/users/${userId}`);
       const userData = userRes.data;
-      return userData?.address || userData?.region || userData?.profile?.region || "";
+      return userData?.item?.address || userData?.item?.region || userData?.item?.profile?.region || "";
     } catch (err) {
       console.error("사용자 지역 조회 실패:", err);
       return "";
@@ -63,13 +64,10 @@ export const useJobPosts = () => {
     setRecError(null);
 
     try {
-      // useAuth의 user는 User | null 타입
       const typedUser = user as User | null;
-
       const userId = typedUser?.id;
 
       if (!userId) {
-        // 로그인은 되어 있으나 id를 찾을 수 없으면 프로필 미완성 상태로 처리
         setRecommendedPosts([]);
         setProfileIncomplete(true);
         return;
@@ -77,7 +75,6 @@ export const useJobPosts = () => {
 
       const region = await getUserRegion(userId);
 
-      // 사용자의 지역 정보가 없으면 맞춤 공고를 보여주지 않고 프로필 미완성으로 처리
       if (!region) {
         setRecommendedPosts([]);
         setProfileIncomplete(true);
@@ -86,7 +83,12 @@ export const useJobPosts = () => {
 
       setProfileIncomplete(false);
 
-      const responseData = await getNotices({ offset: 0, limit: 100, address: region, sort: "time" });
+      const responseData = await getNotices({
+        offset: 0,
+        limit: 100,
+        address: region,
+        sort: "time",
+      });
       const allPosts = parsePostsResponse(responseData);
       const activePosts = getActivePosts(allPosts);
 
@@ -100,32 +102,12 @@ export const useJobPosts = () => {
     }
   }, [user, getUserRegion, getActivePosts]);
 
-  const fetchPosts = useCallback(async (page: number = 1, filters: FilterOptions = {}, sort: string = "time") => {
+  const fetchPosts = useCallback(async (page = 1, filters: FilterOptions = {}, sort: SortOption = "time") => {
     setLoading(true);
     setError(null);
 
     try {
-      const params = new URLSearchParams();
-      params.append("offset", "0");
-      params.append("limit", "100");
-
       const apiParams = convertFilterOptionsToApiParams(filters);
-
-      if (apiParams.address?.length) {
-        apiParams.address.forEach(location => {
-          params.append("address", location);
-        });
-      }
-
-      if (apiParams.startsAtGte) {
-        params.append("startsAtGte", apiParams.startsAtGte);
-      }
-
-      if (apiParams.hourlyPayGte) {
-        params.append("hourlyPayGte", String(apiParams.hourlyPayGte));
-      }
-
-      params.append("sort", sort);
 
       const responseData = await getNotices({
         offset: 0,
@@ -135,6 +117,7 @@ export const useJobPosts = () => {
         hourlyPayGte: apiParams.hourlyPayGte,
         sort,
       });
+
       const allPosts = parsePostsResponse(responseData);
 
       // 한 번의 순회로 active/closed 분류
@@ -151,7 +134,6 @@ export const useJobPosts = () => {
       );
 
       const sortedAllPosts = [...activePosts, ...closedPosts];
-
       const pageItems = sortedAllPosts.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
       setPosts(pageItems);
@@ -174,7 +156,7 @@ export const useJobPosts = () => {
   }, [currentPage, appliedFilters, sortOption, fetchPosts]);
 
   const handleSortChange = useCallback((value: string) => {
-    setSortOption(value);
+    setSortOption(value as SortOption);
     setCurrentPage(1);
   }, []);
 
@@ -209,7 +191,7 @@ export const useJobPosts = () => {
 
   const handleLoginClick = useCallback(() => {
     router.push("/login");
-  }, [router]);
+  }, []);
 
   return {
     sortOption,
@@ -225,6 +207,7 @@ export const useJobPosts = () => {
     recError,
     profileIncomplete,
     userLoggedIn,
+    userType,
     handleSortChange,
     handleFilterClick,
     handleFilterClose,

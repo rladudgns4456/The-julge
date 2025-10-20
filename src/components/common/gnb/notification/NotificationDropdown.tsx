@@ -21,14 +21,14 @@ const NotificationDropDown = ({ onClose }: DropdownProps) => {
   });
 
   const handleNotificationClick = async (notification: NotificationItem) => {
-    if (!notification.item.read) {
+    if (!notification.read) {
       try {
-        await markAsRead(notification.item.id);
+        await markAsRead(notification.id);
       } catch (err) {
         throw new Error("읽은 알림을 처리하는데 실패했습니다.");
       }
     }
-    router.push(notification.item.notice.href);
+    router.push(notification.notice.href);
 
     onClose();
   };
@@ -64,7 +64,7 @@ const NotificationDropDown = ({ onClose }: DropdownProps) => {
             {notifications.map(notification => (
               <NotificationCard
                 key={notification.item.id}
-                notification={notification}
+                notification={notification.item}
                 onClick={handleNotificationClick}
               />
             ))}

@@ -6,11 +6,28 @@ import Input from "@/components/common/input/Input";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserData } from "@/hooks/useUserData";
 import { useNoticeForm } from "@/hooks/useNoticeForm";
+import { useSearchParams } from "next/navigation";
+import { useShopNoticeDetail } from "@/hooks/useShopNoticeDetail";
 
 export default function NoticeRegisterPage() {
+  const searchParams = useSearchParams();
+
+  // 쿼리 파라미터 mode 확인
+  const mode = searchParams.get("mode") === "edit" ? "edit" : "new";
+  const noticeIdFromQuery = searchParams.get("noticeId");
+  const shopIdFromQuery = searchParams.get("shopId");
+
   const { user } = useAuth();
   const { userData } = useUserData(user?.id);
-  const shopId = userData?.shop?.item?.id ?? null;
+
+  const shopId = mode === "new" ? userData?.shop?.item?.id ?? null : shopIdFromQuery;
+
+  // 편집 모드일 때 기존 공고 데이터 가져오기
+  const {
+    noticeDetail,
+    isLoading: isLoadingNotice,
+    error: noticeError,
+  } = useShopNoticeDetail(mode === "edit" ? shopId : null, mode === "edit" ? noticeIdFromQuery : null);
 
   const {
     formData,
@@ -24,10 +41,43 @@ export default function NoticeRegisterPage() {
     handleDateBlur,
     handleSubmit,
     handleClose,
-  } = useNoticeForm({ shopId });
+  } = useNoticeForm({
+    shopId,
+    mode,
+    noticeId: mode === "edit" ? noticeIdFromQuery : null,
+    initialData: mode === "edit" ? noticeDetail : null,
+  });
 
+  // 편집 모드에서 공고 정보 로딩 중
+  if (mode === "edit" && isLoadingNotice) {
+    return (
+      <main className="w-full max-w-[964px] mx-auto my-[3.75rem] px-8 flex items-center justify-center">
+        <p className="text-body-1-regular text-gray-40">공고 정보를 불러오는 중...</p>
+      </main>
+    );
+  }
+
+  // 편집 모드에서 공고 정보 로딩 실패
+  if (mode === "edit" && (noticeError || !noticeDetail)) {
+    return (
+      <main className="w-full max-w-[964px] mx-auto my-[3.75rem] px-8">
+        <div className="w-full mb-4 p-4 bg-red-10 border border-red-40 rounded-lg text-red-40">
+          {noticeError || "공고 정보를 찾을 수 없습니다."}
+        </div>
+        <Button onClick={handleClose} variant="primary">
+          돌아가기
+        </Button>
+      </main>
+    );
+  }
+
+  // 에러 표시
   if (error) {
-    return <div className="w-full mb-4 p-4 bg-red-10 border border-red-40 rounded-lg text-red-40">{error}</div>;
+    return (
+      <main className="w-full max-w-[964px] mx-auto my-[3.75rem] px-8">
+        <div className="w-full mb-4 p-4 bg-red-10 border border-red-40 rounded-lg text-red-40">{error}</div>
+      </main>
+    );
   }
 
   return (
@@ -115,7 +165,7 @@ export default function NoticeRegisterPage() {
           {/* 제출 버튼 */}
           <div className="col-start-2">
             <Button variant="primary" className="w-full" size="large" type="submit" disabled={isLoading}>
-              {isLoading ? "등록 중..." : "등록하기"}
+              {isLoading ? (mode === "edit" ? "수정 중..." : "등록 중...") : mode === "edit" ? "수정하기" : "등록하기"}
             </Button>
           </div>
         </div>

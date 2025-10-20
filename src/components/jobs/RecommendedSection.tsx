@@ -12,6 +12,7 @@ interface RecommendedSectionProps {
   recError: string | null;
   recommendedPosts: PostData[];
   profileIncomplete?: boolean;
+  userType?: string | null;
   onPostClick: (post: PostData) => void;
   onLoginClick: () => void;
   onRetry: () => void;
@@ -23,11 +24,15 @@ const RecommendedSection: React.FC<RecommendedSectionProps> = ({
   recError,
   recommendedPosts,
   profileIncomplete,
+  userType,
   onPostClick,
   onLoginClick,
   onRetry,
 }) => {
   const router = useRouter();
+  // 사장일 때는 맞춤공고 섹션 자체를 렌더링하지 않음
+  if (userType === "employer") return null;
+
   return (
     <div className="mb-9 bg-red-10">
       <div className="max-w-[994px] mx-auto px-4 py-8">

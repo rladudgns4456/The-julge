@@ -1,6 +1,6 @@
-import { useState, ChangeEvent, FocusEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FocusEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { postShopNotice } from "@/api/notice/NoticeApi";
+import { postShopNotice, putShopNotice } from "@/api/notice/NoticeApi";
 import {
   NoticeFormData,
   NoticeValidationErrors,
@@ -10,12 +10,45 @@ import {
   validateWorkhour,
   hasValidationErrors,
 } from "@/hooks/useNoticeValidation";
+import { NoticeDetailItem } from "@/types/notice";
+
+type FormMode = "new" | "edit";
 
 interface UseNoticeFormProps {
   shopId: string | null;
+  mode?: FormMode;
+  noticeId?: string | null;
+  initialData?: NoticeDetailItem | null;
 }
 
-export const useNoticeForm = ({ shopId }: UseNoticeFormProps) => {
+interface UseNoticeFormReturn {
+  mode: FormMode;
+  formData: NoticeFormData;
+  validationErrors: NoticeValidationErrors;
+  dateInputType: "text" | "datetime-local";
+  isLoading: boolean;
+  error: string | null;
+  handleInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleInputBlur: (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleDateFocus: (e: FocusEvent<HTMLInputElement>) => void;
+  handleDateBlur: (e: FocusEvent<HTMLInputElement>) => void;
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  handleClose: () => void;
+}
+
+/**
+ * 공고 등록 및 편집 통합+
+ * @param mode - "new"(등록) or "edit"(편집)
+ * @param shopId - 가게 ID
+ * @param noticeId - 공고 ID (편집 모드에서만 필요)
+ * @param initialData - 초기 데이터 (편집 모드에서만 필요)
+ */
+export const useNoticeForm = ({
+  shopId,
+  mode = "new",
+  noticeId,
+  initialData,
+}: UseNoticeFormProps): UseNoticeFormReturn => {
   const router = useRouter();
 
   const [formData, setFormData] = useState<NoticeFormData>({
@@ -35,6 +68,25 @@ export const useNoticeForm = ({ shopId }: UseNoticeFormProps) => {
   const [dateInputType, setDateInputType] = useState<"text" | "datetime-local">("text");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mode === "edit" && initialData) {
+      // ISO 문자열을 datetime-local 형식으로 변환
+      const formattedDate = initialData.startsAt ? new Date(initialData.startsAt).toISOString().slice(0, 16) : "";
+
+      setFormData({
+        hourlyPay: String(initialData.hourlyPay),
+        startsAt: formattedDate,
+        workhour: String(initialData.workhour),
+        description: initialData.description,
+      });
+
+      // 날짜가 있으면 datetime-local 타입으로 설정
+      if (formattedDate) {
+        setDateInputType("datetime-local");
+      }
+    }
+  }, [mode, initialData]);
 
   /**
    * 입력값 변경 핸들러
@@ -118,35 +170,53 @@ export const useNoticeForm = ({ shopId }: UseNoticeFormProps) => {
       return;
     }
 
+    // 편집 모드일 때 noticeId 확인
+    if (mode === "edit" && !noticeId) {
+      setError("공고 정보가 없습니다.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
       const formattedStartsAt = new Date(formData.startsAt).toISOString();
-
-      await postShopNotice(shopId, {
+      const requestBody = {
         hourlyPay: Number(formData.hourlyPay),
         startsAt: formattedStartsAt,
         workhour: Number(formData.workhour),
         description: formData.description || "공고 설명이 없습니다.",
-      });
+      };
 
-      router.push("/owner");
+      if (mode === "edit" && noticeId) {
+        // 편집 모드 - PUT 요청
+        await putShopNotice(shopId, noticeId, requestBody);
+        router.push(`/owner/notice/${shopId}/${noticeId}`);
+      } else {
+        // 등록 모드: POST 요청
+        await postShopNotice(shopId, requestBody);
+        router.push(`/shops/notice/${shopId}/${noticeId}`);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "공고 등록에 실패했습니다.");
+      const message =
+        err instanceof Error
+          ? err.message
+          : mode === "edit"
+          ? "공고 수정에 실패했습니다."
+          : "공고 등록에 실패했습니다.";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  /**
-   * 닫기 핸들러
-   */
+  // 닫기 핸들러
   const handleClose = () => {
     router.back();
   };
 
   return {
+    mode,
     formData,
     validationErrors,
     dateInputType,
