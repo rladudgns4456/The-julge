@@ -32,6 +32,7 @@ export const useJobPosts = () => {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   const { user } = useAuth();
+  const userType = user?.type ?? null;
   const router = useRouter();
 
   const getUserRegion = useCallback(async (userId: string): Promise<string> => {
@@ -206,6 +207,7 @@ export const useJobPosts = () => {
     recError,
     profileIncomplete,
     userLoggedIn,
+    userType,
     handleSortChange,
     handleFilterClick,
     handleFilterClose,
