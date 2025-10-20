@@ -121,7 +121,6 @@ export default function ProfileDetailPage() {
                     {app.shopName} • {new Date(app.createdAt).toLocaleDateString("ko-KR")}
                   </p>
                 </div>
-
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
                     app.status === "pending"

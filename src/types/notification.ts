@@ -1,7 +1,10 @@
 import { ShopItem } from "@/types/shop";
 import { Notice } from "@/types/notice";
 import { Application } from "@/types/application";
+<<<<<<< HEAD
 import { LinkInfo } from "./links";
+=======
+>>>>>>> 9263d76 ([찬민]dev 최신화)
 
 export interface NotificationItem {
   id: string;
