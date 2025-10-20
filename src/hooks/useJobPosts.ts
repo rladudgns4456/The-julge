@@ -38,7 +38,7 @@ export const useJobPosts = () => {
     try {
       const userRes = await axios.get(`/users/${userId}`);
       const userData = userRes.data;
-      return userData?.address || userData?.region || userData?.profile?.region || "";
+      return userData?.item?.address || userData?.item?.region || userData?.item?.profile?.region || "";
     } catch (err) {
       console.error("사용자 지역 조회 실패:", err);
       return "";
