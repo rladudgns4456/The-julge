@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-static";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/button";

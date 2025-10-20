@@ -7,7 +7,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default [
   // 🔹 무시할 디렉토리
   {
-    ignores: ["node_modules", "dist", ".next"],
+    ignores: ["node_modules", "dist", ".next", "tailwind.config.js"],
   },
   // 🔹 JS / TS / JSX / TSX 파일에 대한 규칙
   {
