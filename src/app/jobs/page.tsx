@@ -33,6 +33,7 @@ export default function Page() {
     fetchRecommendedPosts,
     fetchPosts,
     profileIncomplete,
+    userType,
   } = useJobPosts();
 
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -46,6 +47,7 @@ export default function Page() {
         recError={recError}
         recommendedPosts={recommendedPosts}
         profileIncomplete={profileIncomplete}
+        userType={userType}
         onPostClick={handlePostClick}
         onLoginClick={handleLoginClick}
         onRetry={fetchRecommendedPosts}
