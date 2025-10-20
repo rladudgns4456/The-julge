@@ -105,7 +105,7 @@ export default function ProfileEditPage() {
 
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">선호 지역</label>
-            <select
+            <select //속성 이름 없어도 문제없는지? 린트에러가 나고있어서요 - 찬민
               name="region"
               value={form.region}
               onChange={handleChange}

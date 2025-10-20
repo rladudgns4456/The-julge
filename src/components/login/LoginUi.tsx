@@ -154,7 +154,6 @@ export default function LoginUi() {
               error={errors.password}
               onChange={handleInputChange}
             />
-
             <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>
               {isLoading ? "로그인 중..." : "로그인 하기"}
             </Button>
@@ -162,12 +161,14 @@ export default function LoginUi() {
 
           <div className="text-center mt-6">
             <span className="text-black text-sm">회원이 아니신가요? </span>
-            <button
-              onClick={handleSignupClick}
-              className="text-blue-20 hover:text-blue-20/80 underline font-medium text-sm"
-            >
-              회원가입 하기
-            </button>
+            <Link href="/signup">
+              <button
+                onClick={handleSignupClick}
+                className="text-blue-20 hover:text-blue-20/80 underline font-medium text-sm"
+              >
+                회원가입 하기
+              </button>
+            </Link>
           </div>
         </div>
 
