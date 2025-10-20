@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { NotificationItem } from "@/types/notification";
+import { NotificationInfo } from "@/types/notification";
 import { useInfinitePagination } from "@/hooks/useInfinitePagination";
 import { getAlerts, putAlerts } from "@/api/alert/AlertsApi";
 
@@ -35,7 +35,7 @@ export const useNotifications = () => {
     loadMore,
     refresh,
     reset,
-  } = useInfinitePagination<NotificationItem>({
+  } = useInfinitePagination<NotificationInfo>({
     fetchFunction: fetchNotifications,
     limit: ITEMS_LIMIT,
   });

@@ -17,7 +17,7 @@ const formatTimestamp = (timestamp: string) => {
 // 알림 메시지 생성
 
 const getNotificationMessage = (notification: NotificationItem) => {
-  const { shop, notice, result } = notification.item;
+  const { shop, notice, result } = notification;
 
   // 날짜 포맷팅: 2025-10-05T09:00:00Z -> 2025-10-05 09:00
   const startDate = new Date(notice.item.startsAt);
@@ -68,18 +68,17 @@ interface NotificationCardProps {
 }
 
 const NotificationCard: React.FC<NotificationCardProps> = ({ notification, onClick }) => {
-  const { item } = notification;
-  const { dotColor } = getResultStyles(item.result);
+  const { dotColor } = getResultStyles(notification.result);
   const message = getNotificationMessage(notification);
   return (
     <button
-      key={item.id}
+      key={notification.id}
       onClick={() => onClick(notification)}
       className="flex flex-col gap-1 bg-white px-3 py-4 rounded-[5px] text-left border-solid border-[1px] border-gray-20"
     >
-      {!item.read && <div className={`w-[5px] h-[5px] ${dotColor} rounded-full`} />}
-      <p className="text-body-2-regular">{highlightResult(message, item.result)}</p>
-      <p className="text-caption text-gray-40">{formatTimestamp(item.createdAt)}</p>
+      {!notification.read && <div className={`w-[5px] h-[5px] ${dotColor} rounded-full`} />}
+      <p className="text-body-2-regular">{highlightResult(message, notification.result)}</p>
+      <p className="text-caption text-gray-40">{formatTimestamp(notification.createdAt)}</p>
     </button>
   );
 };
