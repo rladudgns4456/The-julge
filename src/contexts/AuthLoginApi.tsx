@@ -2,7 +2,7 @@
 
 import { User, LoginResponse } from "@/types/user";
 import { loginUser } from "@/api/login/LoginApi";
-import { AuthLoginModal } from "@/contexts/AuthLoginModal";
+import { handleTokenExpiry } from "@/contexts/AuthLoginModal";
 
 // 상태 변경 리스너 타입
 type AuthStateListener = (user: User | null) => void;
@@ -10,7 +10,7 @@ type AuthStateListener = (user: User | null) => void;
 export class AuthLoginApi {
   private static listeners: AuthStateListener[] = [];
   private static currentUser: User | null = null;
-  private static readonly TOKEN_EXPIRY_MINUTES = 5; // 분 단위로 토큰 유효시간 설정가능
+  private static readonly TOKEN_EXPIRY_MINUTES = 1; // 분 단위로 토큰 유효시간 설정가능
 
   // 상태 변경 리스너 등록/해제
   static subscribe(listener: AuthStateListener): () => void {
@@ -24,13 +24,11 @@ export class AuthLoginApi {
     };
   }
 
-  // 상태 변경 알림
   private static notifyListeners(user: User | null): void {
     this.currentUser = user;
     this.listeners.forEach(listener => listener(user));
   }
 
-  // 현재 사용자 정보 가져오기
   static getCurrentUser(): User | null {
     return this.currentUser;
   }
@@ -49,7 +47,7 @@ export class AuthLoginApi {
     // 만료 시간 이후 토큰 무효
     if (now > expirationTime) {
       this.executeLogout();
-      AuthLoginModal.showTokenExpiredModal();
+      handleTokenExpiry(); // 로그인 페이지로 이동
       return false;
     }
     return true;
@@ -116,7 +114,7 @@ export class AuthLoginApi {
         return null;
       }
     }
-    // 저장된 정보가 없으면 null
+
     this.notifyListeners(null);
     return null;
   }
@@ -126,10 +124,5 @@ export class AuthLoginApi {
     localStorage.removeItem("userId");
     localStorage.removeItem("user");
     this.notifyListeners(null);
-
-    // 토큰 만료로 인한 로그아웃 체크
-    if (this.currentUser) {
-      AuthLoginModal.showTokenExpiredModal();
-    }
   }
 }
