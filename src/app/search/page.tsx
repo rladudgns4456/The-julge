@@ -1,27 +1,28 @@
 "use client";
 
 import React from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import PostsHeader from "@/components/jobs/PostsHeader";
-import RecommendedSection from "@/components/jobs/RecommendedSection";
 import PostsGrid from "@/components/jobs/PostsGrid";
 import { useJobPosts } from "@/hooks/useJobPosts";
 
 const ITEMS_PER_PAGE = 9;
 
-export default function Page() {
+const SearchPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get("keyword") ?? "";
+
+  // useJobPosts 훅 사용 (keyword 전달)
   const {
     sortOption,
     currentPage,
     isFilterOpen,
     appliedFilters,
-    posts,
+    posts: pageItems,
     totalItems,
     loading,
     error,
-    recommendedPosts,
-    recLoading,
-    recError,
-    userLoggedIn,
     handleSortChange,
     handleFilterClick,
     handleFilterClose,
@@ -29,29 +30,16 @@ export default function Page() {
     handleFilterReset,
     handlePostClick,
     handlePageChange,
-    handleLoginClick,
-    fetchRecommendedPosts,
     fetchPosts,
-    profileIncomplete,
-    userType,
-  } = useJobPosts();
+  } = useJobPosts({
+    keyword,
+    isSearchPage: true,
+  });
 
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-gray-5">
-      <RecommendedSection
-        userLoggedIn={userLoggedIn}
-        recLoading={recLoading}
-        recError={recError}
-        recommendedPosts={recommendedPosts}
-        profileIncomplete={profileIncomplete}
-        userType={userType}
-        onPostClick={handlePostClick}
-        onLoginClick={handleLoginClick}
-        onRetry={fetchRecommendedPosts}
-      />
-
       <div className="max-w-[994px] mx-auto px-4 py-8">
         <PostsHeader
           sortOption={sortOption}
@@ -62,19 +50,27 @@ export default function Page() {
           onFilterApply={handleFilterApply}
           onFilterReset={handleFilterReset}
           appliedFilters={appliedFilters}
+          title={
+            <>
+              <span className="text-primary-20 font-bold">"{keyword}"</span> 검색 결과
+            </>
+          }
+          resultCount={totalItems}
         />
 
         <PostsGrid
-          posts={posts}
+          posts={pageItems}
           loading={loading}
           error={error}
           currentPage={currentPage}
           totalPages={totalPages}
           onPostClick={handlePostClick}
           onPageChange={handlePageChange}
-          onRetry={() => fetchPosts(currentPage, appliedFilters, "time")}
+          onRetry={() => fetchPosts(currentPage, appliedFilters, sortOption)}
         />
       </div>
     </div>
   );
-}
+};
+
+export default SearchPage;
