@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import Input from "@/components/common/input/Input";
 import Button from "@/components/common/button";
 import Modal from "@/components/common/modal/CommonModal";
@@ -111,7 +112,9 @@ export default function LoginUi() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Image src="/logo.svg" alt="THE JULGE 로고" width={248} height={45} className="mx-auto" />
+          <Link href="/jobs">
+            <Image src="/logo.svg" alt="THE JULGE 로고" width={248} height={45} className="mx-auto cursor-pointer" />
+          </Link>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

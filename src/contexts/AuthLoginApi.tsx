@@ -10,7 +10,7 @@ type AuthStateListener = (user: User | null) => void;
 export class AuthLoginApi {
   private static listeners: AuthStateListener[] = [];
   private static currentUser: User | null = null;
-  private static readonly TOKEN_EXPIRY_MINUTES = 1; // 분 단위로 토큰 유효시간 설정가능
+  private static readonly TOKEN_EXPIRY_MINUTES = 5; // 분 단위로 토큰 유효시간 설정가능
 
   // 상태 변경 리스너 등록/해제
   static subscribe(listener: AuthStateListener): () => void {
