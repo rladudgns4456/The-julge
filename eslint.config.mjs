@@ -1,5 +1,6 @@
 import nextPlugin from "@next/eslint-plugin-next";
 import tseslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser"; // ✅ 추가
 import prettier from "eslint-plugin-prettier";
 import eslintConfigPrettier from "eslint-config-prettier";
 
@@ -17,12 +18,14 @@ export default [
       "@next/next": nextPlugin,
     },
     languageOptions: {
+      parser: tsParser, // ✅ TypeScript 파서 지정
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
         ecmaFeatures: {
           jsx: true, // ✅ JSX 문법 인식
         },
+        project: "./tsconfig.json", // ✅ 타입 기반 규칙 활성화용 (선택)
       },
     },
     rules: {
@@ -37,8 +40,6 @@ export default [
 
       /* ✅ 커스텀 규칙 */
       "@typescript-eslint/no-explicit-any": "warn",
-
-      // 🚨 ESLint가 "사용 중인 import"를 잘못 unused로 감지하는 문제 완화
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -48,10 +49,8 @@ export default [
         },
       ],
 
-      /* React / Next 관련 */
       "react-hooks/exhaustive-deps": "off",
 
-      /* ✅ Prettier 포맷 자동 적용 */
       "prettier/prettier": [
         "error",
         {
