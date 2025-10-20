@@ -202,9 +202,10 @@ export const useJobPosts = (options: UseJobPostsOptions = {}) => {
     setCurrentPage(1);
   }, []);
 
+  // ✅ 수정: shopId도 함께 전달
   const handlePostClick = useCallback(
     (post: PostData) => {
-      router.push(`/jobs/${post.id}`);
+      router.push(`/jobs/${post.shop.id}/${post.id}`);
     },
     [router],
   );
@@ -215,7 +216,7 @@ export const useJobPosts = (options: UseJobPostsOptions = {}) => {
 
   const handleLoginClick = useCallback(() => {
     router.push("/login");
-  }, []);
+  }, [router]);
 
   return {
     sortOption,
