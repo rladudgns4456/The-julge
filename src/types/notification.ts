@@ -1,16 +1,13 @@
 import { ShopItem } from "@/types/shop";
 import { Notice } from "@/types/notice";
 import { Application } from "@/types/application";
-<<<<<<< HEAD
 import { LinkInfo } from "./links";
-=======
->>>>>>> 9263d76 ([찬민]dev 최신화)
 
 export interface NotificationItem {
   id: string;
   createdAt: string; // 생성 시간
   result: "accepted" | "rejected"; // 지원 결과
-  read: boolean; // 읽음 여부
+  read: boolean; // 읽음 여부  
   application: {
     item: Application;
     href: string;
