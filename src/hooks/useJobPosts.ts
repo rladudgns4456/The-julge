@@ -16,7 +16,14 @@ import { SORT_OPTIONS } from "@/constants/options";
 const ITEMS_PER_PAGE = 9;
 const RECOMMENDED_POSTS_LIMIT = 3;
 
-export const useJobPosts = () => {
+interface UseJobPostsOptions {
+  keyword?: string;
+  isSearchPage?: boolean;
+}
+
+export const useJobPosts = (options: UseJobPostsOptions = {}) => {
+  const { keyword = "", isSearchPage = false } = options;
+
   const [sortOption, setSortOption] = useState<SortOption>(SORT_OPTIONS[0].value as SortOption);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -50,7 +57,10 @@ export const useJobPosts = () => {
     return allPosts.filter((post: PostData) => !isPostClosed(post));
   }, []);
 
+  // 추천 공고 (검색 페이지에서는 스킵)
   const fetchRecommendedPosts = useCallback(async () => {
+    if (isSearchPage) return; // 검색 페이지에서는 실행 안 함
+
     if (!user) {
       setUserLoggedIn(false);
       setRecommendedPosts([]);
@@ -100,60 +110,75 @@ export const useJobPosts = () => {
     } finally {
       setRecLoading(false);
     }
-  }, [user, getUserRegion, getActivePosts]);
+  }, [user, getUserRegion, getActivePosts, isSearchPage]);
 
-  const fetchPosts = useCallback(async (page = 1, filters: FilterOptions = {}, sort: SortOption = "time") => {
-    setLoading(true);
-    setError(null);
+  // 공고 목록 조회 (keyword 파라미터 추가)
+  const fetchPosts = useCallback(
+    async (page = 1, filters: FilterOptions = {}, sort: SortOption = "time") => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const apiParams = convertFilterOptionsToApiParams(filters);
+      try {
+        const apiParams = convertFilterOptionsToApiParams(filters);
 
-      const responseData = await getNotices({
-        offset: 0,
-        limit: 100,
-        address: apiParams.address,
-        startsAtGte: apiParams.startsAtGte,
-        hourlyPayGte: apiParams.hourlyPayGte,
-        sort,
-      });
+        const responseData = await getNotices({
+          offset: 0,
+          limit: 100,
+          keyword: keyword || undefined, // 검색 페이지에서만 사용
+          address: apiParams.address,
+          startsAtGte: apiParams.startsAtGte,
+          hourlyPayGte: apiParams.hourlyPayGte,
+          sort,
+        });
 
-      const allPosts = parsePostsResponse(responseData);
+        const allPosts = parsePostsResponse(responseData);
 
-      // 한 번의 순회로 active/closed 분류
-      const { activePosts, closedPosts } = allPosts.reduce(
-        (acc, post) => {
-          if (isPostClosed(post)) {
-            acc.closedPosts.push(post);
-          } else {
-            acc.activePosts.push(post);
-          }
-          return acc;
-        },
-        { activePosts: [] as PostData[], closedPosts: [] as PostData[] },
-      );
+        // 한 번의 순회로 active/closed 분류
+        const { activePosts, closedPosts } = allPosts.reduce(
+          (acc, post) => {
+            if (isPostClosed(post)) {
+              acc.closedPosts.push(post);
+            } else {
+              acc.activePosts.push(post);
+            }
+            return acc;
+          },
+          { activePosts: [] as PostData[], closedPosts: [] as PostData[] },
+        );
 
-      const sortedAllPosts = [...activePosts, ...closedPosts];
-      const pageItems = sortedAllPosts.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+        const sortedAllPosts = [...activePosts, ...closedPosts];
+        const pageItems = sortedAllPosts.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-      setPosts(pageItems);
-      setTotalItems(responseData?.count || sortedAllPosts.length);
-    } catch (err) {
-      console.error("공고 조회 실패:", err);
-      setError("공고를 불러오는데 실패했습니다.");
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        setPosts(pageItems);
+        setTotalItems(responseData?.count || sortedAllPosts.length);
+      } catch (err) {
+        console.error("공고 조회 실패:", err);
+        setError("공고를 불러오는데 실패했습니다.");
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [keyword],
+  );
 
+  // 추천 공고 조회
   useEffect(() => {
     fetchRecommendedPosts();
   }, [user, fetchRecommendedPosts]);
 
+  // 일반 공고 조회 (keyword, 필터, 정렬 변경 시)
   useEffect(() => {
-    fetchPosts(currentPage, appliedFilters, sortOption);
-  }, [currentPage, appliedFilters, sortOption, fetchPosts]);
+    setCurrentPage(1); // keyword 변경 시 첫 페이지로 리셋
+    fetchPosts(1, appliedFilters, sortOption);
+  }, [keyword, appliedFilters, sortOption, fetchPosts]);
+
+  // 페이지만 변경될 때
+  useEffect(() => {
+    if (currentPage !== 1) {
+      fetchPosts(currentPage, appliedFilters, sortOption);
+    }
+  }, [currentPage, fetchPosts, appliedFilters, sortOption]);
 
   const handleSortChange = useCallback((value: string) => {
     setSortOption(value as SortOption);
