@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Input from "@/components/common/input/Input";
@@ -12,9 +12,11 @@ import { BaseFormData } from "@/hooks/useFormData";
 import { BaseErrors } from "@/hooks/useFormValidation";
 import { AuthLoginApi } from "@/contexts/AuthLoginApi";
 import { User } from "@/types/user";
+import { RouterProvider } from "@/contexts/AuthLoginModal";
 
 export default function LoginUi() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // 전역 상태 관리
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -23,6 +25,9 @@ export default function LoginUi() {
   // 모달 상태 관리
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
+  // 토큰 만료 모달 상태 관리
+  const [showTokenExpiredModal, setShowTokenExpiredModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = AuthLoginApi.subscribe(user => {
@@ -35,14 +40,20 @@ export default function LoginUi() {
     return unsubscribe;
   }, []);
 
-  // 로그인 되어있는 상태면 공고리스트로 이동시켜
+  // URL 파라미터 체크, 토큰 만료시 모달 안내
+  useEffect(() => {
+    const reason = searchParams.get("reason");
+    if (reason === "token-expired") {
+      setShowTokenExpiredModal(true);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     if (currentUser) {
       router.push("/jobs");
     }
   }, [currentUser, router]);
 
-  // 통합 폼 관리
   const {
     formData,
     errors,
@@ -59,17 +70,22 @@ export default function LoginUi() {
     },
   );
 
-  // 모달 닫기 함수
   const handleModalClose = () => {
     setShowModal(false);
     setModalMessage("");
+  };
+
+  const handleTokenExpiredModalClose = () => {
+    setShowTokenExpiredModal(false);
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.delete("reason");
+    window.history.replaceState({}, "", newUrl.toString());
   };
 
   // 폼 입력
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     baseHandleInputChange(e);
 
-    // 모달이 열려있다면 닫기
     if (showModal) {
       setShowModal(false);
     }
@@ -109,61 +125,75 @@ export default function LoginUi() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/jobs">
-            <Image src="/logo.svg" alt="THE JULGE 로고" width={248} height={45} className="mx-auto cursor-pointer" />
-          </Link>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Input
-            label="이메일"
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="입력"
-            error={errors.email}
-            onChange={handleInputChange}
-          />
-
-          <Input
-            label="비밀번호"
-            type="password"
-            name="password"
-            value={formData.password}
-            placeholder="입력"
-            error={errors.password}
-            onChange={handleInputChange}
-          />
-
-          <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>
-            {isLoading ? "로그인 중..." : "로그인 하기"}
-          </Button>
-        </form>
-
-        <div className="text-center mt-6">
-          <span className="text-black text-sm">회원이 아니신가요? </span>
-          <button
-            onClick={handleSignupClick}
-            className="text-blue-20 hover:text-blue-20/80 underline font-medium text-sm"
-          >
-            회원가입 하기
-          </button>
-        </div>
-      </div>
-
-      {showModal && (
-        <Modal onClose={handleModalClose}>
-          <div className="space-y-4">
-            <p className="text-black">{modalMessage}</p>
-            <Button onClick={handleModalClose} variant="primary" size="medium" className="w-full">
-              확인
-            </Button>
+    <RouterProvider>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white px-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <Link href="/jobs">
+              <Image src="/logo.svg" alt="THE JULGE 로고" width={248} height={45} className="mx-auto cursor-pointer" />
+            </Link>
           </div>
-        </Modal>
-      )}
-    </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Input
+              label="이메일"
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="입력"
+              error={errors.email}
+              onChange={handleInputChange}
+            />
+
+            <Input
+              label="비밀번호"
+              type="password"
+              name="password"
+              value={formData.password}
+              placeholder="입력"
+              error={errors.password}
+              onChange={handleInputChange}
+            />
+            <Button type="submit" variant="primary" size="large" className="w-full" disabled={isLoading}>
+              {isLoading ? "로그인 중..." : "로그인 하기"}
+            </Button>
+          </form>
+
+          <div className="text-center mt-6">
+            <span className="text-black text-sm">회원이 아니신가요? </span>
+            <Link href="/signup">
+              <button
+                onClick={handleSignupClick}
+                className="text-blue-20 hover:text-blue-20/80 underline font-medium text-sm"
+              >
+                회원가입 하기
+              </button>
+            </Link>
+          </div>
+        </div>
+
+        {showModal && (
+          <Modal onClose={handleModalClose}>
+            <div className="space-y-4">
+              <p className="text-black">{modalMessage}</p>
+              <Button onClick={handleModalClose} variant="primary" size="medium" className="w-full">
+                확인
+              </Button>
+            </div>
+          </Modal>
+        )}
+
+        {showTokenExpiredModal && (
+          <Modal onClose={handleTokenExpiredModalClose}>
+            <div className="space-y-4">
+              <p className="text-black">로그인 세션이 만료되었습니다.</p>
+              <Button onClick={handleTokenExpiredModalClose} variant="primary" size="medium" className="w-full">
+                확인
+              </Button>
+            </div>
+          </Modal>
+        )}
+      </div>
+    </RouterProvider>
   );
 }

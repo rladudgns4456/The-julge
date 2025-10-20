@@ -1,11 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { AuthLoginApi } from "@/contexts/AuthLoginApi";
 
-/*
- * Axios 인스턴스 생성
- * 환경변수 NEXT_PUBLIC_API_URL을 사용하여 유연한 API URL 관리
- */
-
 const instance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {

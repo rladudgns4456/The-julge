@@ -115,9 +115,11 @@ export default function SignupUi() {
 
         <div className="text-center mt-6">
           <span className="text-black">이미 가입하셨나요? </span>
-          <button onClick={handleLoginClick} className="text-blue-20 underline hover:text-blue-20/80 font-medium">
-            로그인하기
-          </button>
+          <Link href="/login">
+            <button onClick={handleLoginClick} className="text-blue-20 underline hover:text-blue-20/80 font-medium">
+              로그인하기
+            </button>
+          </Link>
         </div>
       </div>
 
