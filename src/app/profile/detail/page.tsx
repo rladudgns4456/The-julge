@@ -19,7 +19,7 @@ interface ApplicationData {
   shopName: string;
   startsAt: string;
   workhour: number;
-  hourlyPay: number;
+  hourlyPay?: number; // ✅ 옵셔널로 수정
   status: "pending" | "accepted" | "rejected";
 }
 
@@ -129,7 +129,9 @@ export default function ProfileDetailPage() {
                 <tr key={app.id} className="border-t border-gray-10 hover:bg-gray-50 transition">
                   <td className="py-4 px-6 text-left text-gray-900 font-medium">{app.shopName}</td>
                   <td className="py-4 px-6 text-gray-700">{formatDateTime(app.startsAt, app.workhour)}</td>
-                  <td className="py-4 px-6 text-gray-900">{app.hourlyPay.toLocaleString()}원</td>
+                  <td className="py-4 px-6 text-gray-900">
+                    {app?.hourlyPay != null ? `${app.hourlyPay.toLocaleString()}원` : "-"}
+                  </td>
                   <td className="py-4 px-6">
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
