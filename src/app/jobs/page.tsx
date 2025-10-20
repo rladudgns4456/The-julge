@@ -40,7 +40,6 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-gray-5">
-      {/* 맞춤 공고 섹션 */}
       <RecommendedSection
         userLoggedIn={userLoggedIn}
         recLoading={recLoading}
@@ -53,9 +52,7 @@ export default function Page() {
         onRetry={fetchRecommendedPosts}
       />
 
-      {/* 전체 공고 영역 */}
       <div className="max-w-[994px] mx-auto px-4 py-8">
-        {/* 헤더 */}
         <PostsHeader
           sortOption={sortOption}
           isFilterOpen={isFilterOpen}
@@ -67,7 +64,6 @@ export default function Page() {
           appliedFilters={appliedFilters}
         />
 
-        {/* 공고 그리드 */}
         <PostsGrid
           posts={posts}
           loading={loading}
