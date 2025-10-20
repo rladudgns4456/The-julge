@@ -51,21 +51,9 @@ export default function ProfileDetailPage() {
         bio: profileRes?.bio ?? "",
       });
 
-      // ✅ 다양한 응답 형태 대응
-      const apps = Array.isArray(appRes)
-        ? appRes
-        : Array.isArray(appRes?.applications)
-          ? appRes.applications
-          : Array.isArray(appRes?.data)
-            ? appRes.data
-            : Array.isArray(appRes?.items)
-              ? appRes.items
-              : Array.isArray(appRes?.result)
-                ? appRes.result
-                : [];
-
-      console.log("📦 신청 내역 응답:", appRes);
-      setApplications(apps);
+      // getApplications에서 이미 배열 반환하므로 그대로 사용
+      setApplications(appRes ?? []);
+      console.log("📦 신청 내역 데이터:", appRes);
     } catch (error) {
       console.error("❌ 데이터 로드 실패:", error);
     } finally {
@@ -99,7 +87,7 @@ export default function ProfileDetailPage() {
       <h1 className="text-h2 font-bold mb-[24px] text-black">내 프로필</h1>
 
       {/* 프로필 카드 */}
-      <section className="border border-gray-20 rounded-[8px] bg-[#FFF5F5] py-[32px] px-[24px] mb-[80px] relative shadow-sm">
+      <section className="border border-gray-20 rounded-[8px] bg-[#FFF5F5] py-[32px] px-[24px] mb-[80px] shadow-sm">
         <div className="flex flex-col gap-[8px] text-gray-900">
           <div className="flex items-center justify-between mb-[8px]">
             <p className="text-h3 font-semibold text-red-500">이름</p>
@@ -114,13 +102,13 @@ export default function ProfileDetailPage() {
           </div>
 
           <p className="text-body-1-semibold text-black">{profile.name}</p>
-          <p className="text-body-2-regular text-gray-70 flex items-center gap-2">📞 {profile.phone}</p>
-          <p className="text-body-2-regular text-gray-70 flex items-center gap-2">📍 {profile.address}</p>
+          <p className="text-body-2-regular text-gray-70">📞 {profile.phone}</p>
+          <p className="text-body-2-regular text-gray-70">📍 {profile.address}</p>
           <p className="text-body-1-regular text-gray-80 mt-[8px] leading-relaxed">{profile.bio}</p>
         </div>
       </section>
 
-      {/* 신청 내역 (테이블 형식) */}
+      {/* 신청 내역 */}
       <section>
         <h2 className="text-h3 font-bold mb-[24px] text-black">신청 내역</h2>
 
@@ -138,13 +126,11 @@ export default function ProfileDetailPage() {
               <tbody>
                 {applications.map(app => (
                   <tr key={app.id} className="border-t border-gray-10 hover:bg-gray-50 transition">
-                    <td className="py-4 px-6 text-left text-gray-900 text-body-1-regular">{app.shopName}</td>
-                    <td className="py-4 px-6 text-gray-700 text-body-2-regular">
+                    <td className="py-4 px-6 text-left text-gray-900">{app.shopName}</td>
+                    <td className="py-4 px-6 text-gray-700">
                       {new Date(app.createdAt).toLocaleDateString("ko-KR")} 10:00 ~ 12:00 (2시간)
                     </td>
-                    <td className="py-4 px-6 text-gray-900 text-body-2-semibold">
-                      {(app.hourlyPay ?? 15000).toLocaleString()}원
-                    </td>
+                    <td className="py-4 px-6 text-gray-900">{(app.hourlyPay ?? 15000).toLocaleString()}원</td>
                     <td className="py-4 px-6">
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${

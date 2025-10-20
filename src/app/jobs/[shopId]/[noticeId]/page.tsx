@@ -19,39 +19,33 @@ export default function JobDetailPage() {
 
   const { noticeDetail, isLoading, error } = useShopNoticeDetail(shopId, noticeId);
 
-  const {
-    isApplying,
-    applicationError,
-    hasApplied,
-    applicationStatus,
-    applyForNotice,
-  } = useNoticeApplication(noticeDetail);
+  const { isApplying, applicationError, hasApplied, applicationStatus, applyForNotice } =
+    useNoticeApplication(noticeDetail);
 
   useEffect(() => {
-    if(!isLoading && !error && noticeDetail && noticeId && shopId) {
-      
+    if (!isLoading && !error && noticeDetail && noticeId && shopId) {
       // PostCar가 필요로 하는 PostData 형식으로 현재 공고 데이터로 변환
       const currentNotice: PostData = {
         id: noticeId,
         hourlyPay: noticeDetail.hourlyPay,
         startsAt: noticeDetail.startsAt,
         workhour: noticeDetail.workhour,
-        closed: noticeDetail.closed,     
+        closed: noticeDetail.closed,
         shop: {
           id: shopId,
           name: noticeDetail.shop.item.name,
           address1: noticeDetail.shop.item.address1,
           imageUrl: noticeDetail.shop.item.imageUrl,
-          originalHourlyPay: noticeDetail.shop.item.originalHourlyPay
-        }
+          originalHourlyPay: noticeDetail.shop.item.originalHourlyPay,
+        },
       };
-      
+
       // localStorage에서 기존 목록 읽기
-      const storage = localStorage.getItem('latest');
+      const storage = localStorage.getItem("latest");
       let latestList: PostData[] = storage ? JSON.parse(storage) : [];
 
       // 현재 공고가 이미 목록에 있는지 확인하고, 있다면 제거(최신순 유지)
-      latestList = latestList.filter(item => item.id !== currentNotice.id)
+      latestList = latestList.filter(item => item.id !== currentNotice.id);
 
       // 현재 공고를 목록 맨 앞에 추가
       latestList.unshift(currentNotice);
@@ -60,15 +54,17 @@ export default function JobDetailPage() {
       const limitedList = latestList.slice(0, 7);
 
       // localStorage에 다시 저장
-      localStorage.setItem('latest', JSON.stringify(limitedList));
+      localStorage.setItem("latest", JSON.stringify(limitedList));
 
       // 현재 탭의 LatestNotice 컴포넌트도 바로 갱신 (수동 이벤트 발생)
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'latest',
-        newValue: JSON.stringify(limitedList)
-      }));
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: "latest",
+          newValue: JSON.stringify(limitedList),
+        }),
+      );
     }
-  }, [isLoading, error, noticeDetail, noticeId, shopId])
+  }, [isLoading, error, noticeDetail, noticeId, shopId]);
 
   // 로딩 중
   if (isLoading) {
@@ -84,9 +80,7 @@ export default function JobDetailPage() {
     return (
       <main className="w-full min-h-screen bg-gray-5 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-body-1-regular text-red-40 mb-4">
-            {error || "공고를 찾을 수 없습니다."}
-          </p>
+          <p className="text-body-1-regular text-red-40 mb-4">{error || "공고를 찾을 수 없습니다."}</p>
           <button
             onClick={() => router.back()}
             className="px-4 py-2 bg-primary-20 text-white rounded hover:bg-primary-30"
@@ -119,9 +113,7 @@ export default function JobDetailPage() {
       {/* 공고 상세 정보 */}
       <section className="max-w-[964px] w-full py-[60px]">
         <div className="mb-6">
-          <span className="text-primary-20 text-body-1-bold mb-2 block">
-            {noticeDetail.shop.item.category}
-          </span>
+          <span className="text-primary-20 text-body-1-bold mb-2 block">{noticeDetail.shop.item.category}</span>
           <h1 className="text-h1">{noticeDetail.shop.item.name}</h1>
         </div>
         <NoticeInfo
@@ -135,11 +127,11 @@ export default function JobDetailPage() {
         />
       </section>
 
-             {/* 최근에 본 공고 목록 */}
-             <section className="max-w-[964px] w-full py-[60px]">
-               <h2 className="text-h1 mb-8">최근에 본 공고</h2>
-               <LatestNotice/>
-             </section>
+      {/* 최근에 본 공고 목록 */}
+      <section className="max-w-[964px] w-full py-[60px]">
+        <h2 className="text-h1 mb-8">최근에 본 공고</h2>
+        <LatestNotice />
+      </section>
     </main>
   );
 }

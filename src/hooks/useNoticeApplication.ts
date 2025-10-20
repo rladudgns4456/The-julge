@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { NoticeDetailItem } from "@/types/notice";
 import { ApplicationStatus } from "@/types/application";
 import { postNoticeApplications } from "@/api/application/ApplicationApi";
+import { useRouter } from "next/navigation";
 
 interface UseNoticeApplicationReturn {
   isApplying: boolean;
@@ -14,22 +15,15 @@ interface UseNoticeApplicationReturn {
   applyForNotice: () => Promise<void>;
 }
 
-/**
- * 공고 신청 관련 로직을 관리하는 Hook
- * 
- * @param noticeDetail - 공고 상세 정보
- * @returns 신청 상태 및 함수
- */
-export const useNoticeApplication = (
-  noticeDetail: NoticeDetailItem | null
-): UseNoticeApplicationReturn => {
+export const useNoticeApplication = (noticeDetail: NoticeDetailItem | null): UseNoticeApplicationReturn => {
   const { user } = useAuth();
+  const router = useRouter();
   const [isApplying, setIsApplying] = useState(false);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [hasApplied, setHasApplied] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus | null>(null);
 
-  // 초기 신청 상태 확인
+  // 기존 신청 상태 감지
   useEffect(() => {
     if (noticeDetail?.currentUserApplication) {
       setHasApplied(true);
@@ -40,9 +34,7 @@ export const useNoticeApplication = (
     }
   }, [noticeDetail]);
 
-  /**
-   * 공고 신청 함수
-   */
+  // ✅ 공고 신청 함수
   const applyForNotice = useCallback(async () => {
     if (!noticeDetail || !user) {
       setApplicationError("로그인이 필요합니다.");
@@ -68,15 +60,16 @@ export const useNoticeApplication = (
     setApplicationError(null);
 
     try {
-      const response = await postNoticeApplications(
-        noticeDetail.shop.item.id,
-        noticeDetail.id
-      );
+      // ✅ 신청 API 호출
+      const response = await postNoticeApplications(noticeDetail.shop.item.id, noticeDetail.id);
 
       if (response) {
         setHasApplied(true);
         setApplicationStatus("pending");
         alert("신청이 완료되었습니다!");
+
+        // ✅ 신청 완료 후 프로필 페이지로 이동
+        router.push("/profile");
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "신청에 실패했습니다.";
@@ -85,7 +78,7 @@ export const useNoticeApplication = (
     } finally {
       setIsApplying(false);
     }
-  }, [noticeDetail, user, hasApplied]);
+  }, [noticeDetail, user, hasApplied, router]);
 
   return {
     isApplying,
