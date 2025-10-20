@@ -1,4 +1,3 @@
-// src/api/profile/profileApi.ts
 import secureAxios from "@/api/secureAxios";
 import { handleApiError } from "@/api/error/ErrorHandler";
 
@@ -28,7 +27,6 @@ export const saveProfile = async (
     };
 
     console.log("프로필 등록 요청:", payload);
-
     const res = await secureAxios.put(`/users/${userId}`, payload);
     return res.data;
   } catch (error) {
@@ -52,7 +50,6 @@ export const updateProfile = async (
     };
 
     console.log("프로필 수정 요청:", payload);
-
     const res = await secureAxios.put(`/users/${userId}`, payload);
     return res.data;
   } catch (error) {
@@ -61,12 +58,22 @@ export const updateProfile = async (
   }
 };
 
-// ✅ 신청 내역 조회
+// ✅ 신청 내역 조회 (안정형)
 export const getApplications = async (userId: string) => {
   try {
     const res = await secureAxios.get(`/users/${userId}/applications`);
-    if (Array.isArray(res.data)) return res.data;
-    if (Array.isArray(res.data.applications)) return res.data.applications;
+    const data = res.data;
+
+    // ✅ 다양한 응답 구조 대응
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data.applications)) return data.applications;
+    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data.items)) return data.items;
+    if (Array.isArray(data.result)) return data.result;
+    if (Array.isArray(data.item?.applications)) return data.item.applications;
+    if (Array.isArray(data.data?.applications)) return data.data.applications;
+
+    console.warn("⚠️ 예상치 못한 응답 구조:", data);
     return [];
   } catch (error) {
     console.error("❌ 신청 내역 조회 실패:", error);
