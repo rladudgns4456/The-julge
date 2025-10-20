@@ -1,15 +1,6 @@
 import { ShopItem } from "@/types/shop";
 import { Notice } from "@/types/notice";
-
-export interface Application {
-  id: string;
-  status: "pending" | "accepted" | "rejected";
-}
-
-export interface ApplicationInfo {
-  item: Application;
-  href: string;
-}
+import { Application } from "@/types/application";
 
 export interface NotificationItem {
   id: string;

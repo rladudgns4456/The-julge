@@ -1,5 +1,5 @@
 import { ShopInfomation } from "@/types/shop";
-import { Application } from "@/types/notification";
+import { Application } from "@/types/application";
 import { LinkInfo } from "@/types/links";
 
 export interface Notice {
