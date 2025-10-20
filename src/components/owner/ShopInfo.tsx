@@ -47,7 +47,7 @@ export const ShopInfo = ({ shop }: ShopInfoProps) => {
             {/* 버튼 */}
             <div className="w-full flex gap-2">
               <div className="w-full">
-                <Link href={`/owner/edit-shop/${shop.id}`}>
+                <Link href={`/owner/register-shop?mode=edit&shopId=${shop.id}`}>
                   <Button variant="outlined" className=" w-full" size="large">
                     편집하기
                   </Button>

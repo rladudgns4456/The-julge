@@ -195,7 +195,7 @@ export const useNoticeForm = ({
       } else {
         // 등록 모드: POST 요청
         await postShopNotice(shopId, requestBody);
-        router.push(`/shops/notice/${shopId}/${noticeId}`);
+        router.push("/owner");
       }
     } catch (err) {
       const message =
