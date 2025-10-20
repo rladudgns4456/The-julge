@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 import { NoticeDetailItem } from "@/types/notice";
 import { ApplicationStatus } from "@/types/application";
 import { postNoticeApplications } from "@/api/application/ApplicationApi";
-import { useRouter } from "next/navigation";
 
 interface UseNoticeApplicationReturn {
   isApplying: boolean;
@@ -15,15 +15,17 @@ interface UseNoticeApplicationReturn {
   applyForNotice: () => Promise<void>;
 }
 
+/** ✅ 공고 신청 관련 훅 */
 export const useNoticeApplication = (noticeDetail: NoticeDetailItem | null): UseNoticeApplicationReturn => {
   const { user } = useAuth();
   const router = useRouter();
+
   const [isApplying, setIsApplying] = useState(false);
   const [applicationError, setApplicationError] = useState<string | null>(null);
   const [hasApplied, setHasApplied] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus | null>(null);
 
-  // 기존 신청 상태 감지
+  // ✅ 기존 신청 상태 체크
   useEffect(() => {
     if (noticeDetail?.currentUserApplication) {
       setHasApplied(true);
@@ -60,16 +62,22 @@ export const useNoticeApplication = (noticeDetail: NoticeDetailItem | null): Use
     setApplicationError(null);
 
     try {
-      // ✅ 신청 API 호출
-      const response = await postNoticeApplications(noticeDetail.shop.item.id, noticeDetail.id);
+      // ✅ userId 포함해 신청
+      const response = await postNoticeApplications(
+        noticeDetail.shop.item.id,
+        noticeDetail.id,
+        user.id, // ✅ 핵심 추가
+      );
 
       if (response) {
         setHasApplied(true);
         setApplicationStatus("pending");
         alert("신청이 완료되었습니다!");
 
-        // ✅ 신청 완료 후 프로필 페이지로 이동
-        router.push("/profile");
+        // ✅ 신청 성공 후 약간의 딜레이 후 프로필로 이동
+        setTimeout(() => {
+          router.push("/profile");
+        }, 700);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "신청에 실패했습니다.";
