@@ -1,57 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import Button from "@/components/common/button";
-import instance from "@/api/axios";
+import { useRouter } from "next/navigation";
+import { getProfile } from "@/api/profile/profileApi";
+import { AuthLoginApi } from "@/contexts/AuthLoginApi";
 
 export default function ProfilePage() {
-  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const router = useRouter();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    const user = AuthLoginApi.getCurrentUser() ?? AuthLoginApi.restoreUserFromStorage();
+
+    if (!user?.id) {
+      alert("로그인이 필요합니다.");
+      router.push("/login");
+      return;
+    }
+
     const checkProfile = async () => {
       try {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-          setHasProfile(false);
-          return;
-        }
+        const profileRes = await getProfile(user.id);
 
-        const res = await instance.get(`/users/${userId}`);
-        setHasProfile(!!res.data);
+        const hasProfile = profileRes && (profileRes.name || profileRes.phone || profileRes.address || profileRes.bio);
+
+        if (hasProfile) {
+          router.replace("/profile/detail"); // ✅ 프로필 있으면 상세페이지로
+        } else {
+          router.replace("/profile/register"); // ✅ 없으면 등록페이지로
+        }
       } catch (err) {
-        console.error("프로필 불러오기 실패:", err);
-        setHasProfile(false);
+        console.error("프로필 확인 실패:", err);
+        router.replace("/profile/register");
+      } finally {
+        setChecking(false);
       }
     };
 
     checkProfile();
-  }, []);
+  }, [router]);
 
-  if (hasProfile === null) return <p className="text-center mt-10">프로필 정보를 불러오는 중...</p>;
+  if (checking)
+    return (
+      <main className="min-h-screen flex items-center justify-center text-gray-500">
+        프로필 정보를 확인 중입니다...
+      </main>
+    );
 
-  return (
-    <main className="min-h-screen w-full max-w-[957px] mx-auto px-5 pt-[24px] pb-[96px]">
-      <h1 className="text-h2 font-bold mb-[16px]">내 프로필</h1>
-
-      {hasProfile ? (
-        <Link href="/profile/detail">
-          <Button variant="primary" size="large" className="w-[240px] h-[47px] mx-auto block">
-            내 프로필 보기
-          </Button>
-        </Link>
-      ) : (
-        <section className="border border-gray-20 rounded-[8px] bg-white py-[56px] px-[24px] text-center shadow">
-          <p className="text-body-1-regular text-gray-50 mb-[28px]">
-            내 프로필을 등록하고 원하는 가게에 지원해 보세요.
-          </p>
-          <Link href="/profile/register">
-            <Button variant="primary" size="large" className="w-[240px] h-[47px] mx-auto">
-              내 프로필 등록하기
-            </Button>
-          </Link>
-        </section>
-      )}
-    </main>
-  );
+  return null;
 }
