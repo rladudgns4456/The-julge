@@ -181,8 +181,8 @@ export const useShopForm = ({ mode = "new", shopId, initialData }: UseShopFormPr
         err instanceof Error
           ? err.message
           : mode === "edit"
-          ? "가게 수정에 실패했습니다."
-          : "가게 등록에 실패했습니다.";
+            ? "가게 수정에 실패했습니다."
+            : "가게 등록에 실패했습니다.";
       setError(message);
     } finally {
       setIsLoading(false);

@@ -40,6 +40,7 @@ export default [
 
       /* ✅ 커스텀 규칙 */
       "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/triple-slash-reference": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

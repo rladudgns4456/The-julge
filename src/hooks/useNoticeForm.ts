@@ -202,8 +202,8 @@ export const useNoticeForm = ({
         err instanceof Error
           ? err.message
           : mode === "edit"
-          ? "공고 수정에 실패했습니다."
-          : "공고 등록에 실패했습니다.";
+            ? "공고 수정에 실패했습니다."
+            : "공고 등록에 실패했습니다.";
       setError(message);
     } finally {
       setIsLoading(false);

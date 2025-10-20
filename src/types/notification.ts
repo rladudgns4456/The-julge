@@ -7,7 +7,7 @@ export interface NotificationItem {
   id: string;
   createdAt: string; // 생성 시간
   result: "accepted" | "rejected"; // 지원 결과
-  read: boolean; // 읽음 여부  
+  read: boolean; // 읽음 여부
   application: {
     item: Application;
     href: string;

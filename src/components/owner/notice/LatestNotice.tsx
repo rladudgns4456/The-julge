@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import PostCard, {PostData} from "@/components/common/post/PostCard";
+import PostCard, { PostData } from "@/components/common/post/PostCard";
 
 export const LatestNotice = () => {
   const [latestArray, setLatestArray] = useState<PostData[] | null>(null);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const loadLatest = () => {
-        const storage = localStorage.getItem("latest");
+      const storage = localStorage.getItem("latest");
 
-        setLatestArray(storage ? JSON.parse(storage).slice(0, 6) : null)
-    }
+      setLatestArray(storage ? JSON.parse(storage).slice(0, 6) : null);
+    };
 
-    loadLatest()
+    loadLatest();
 
     const handleStorageChange = (e: StorageEvent) => {
-        if(e.key === "latest") {
-            setLatestArray(e.newValue ? JSON.parse(e.newValue).slice(0, 6) : null)
-        }
-    }
+      if (e.key === "latest") {
+        setLatestArray(e.newValue ? JSON.parse(e.newValue).slice(0, 6) : null);
+      }
+    };
 
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
-       window.addEventListener("storage", handleStorageChange); 
-    }
+      window.addEventListener("storage", handleStorageChange);
+    };
   }, []);
 
-const handleCardClick = (notice: PostData) => {
+  const handleCardClick = (notice: PostData) => {
     router.push(`/owner/notice/${notice.shop.id}/${notice.id}`);
   };
 
@@ -42,12 +42,8 @@ const handleCardClick = (notice: PostData) => {
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-        {latestArray.map(notice => (
-            <PostCard
-              post={notice}
-              key={notice.id}
-              onClick={() => handleCardClick(notice)}
-            />
+          {latestArray.map(notice => (
+            <PostCard post={notice} key={notice.id} onClick={() => handleCardClick(notice)} />
           ))}
         </div>
       )}
