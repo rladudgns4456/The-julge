@@ -1,4 +1,3 @@
-// @/components/jobs/PostsHeader.tsx
 import React from "react";
 import { FilterOptions } from "@/types/filter";
 import CustomDropdown from "@/components/common/input/Dropdown";

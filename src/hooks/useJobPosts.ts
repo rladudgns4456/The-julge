@@ -169,9 +169,8 @@ export const useJobPosts = (options: UseJobPostsOptions = {}) => {
 
   // 일반 공고 조회 (keyword, 필터, 정렬 변경 시)
   useEffect(() => {
-    setCurrentPage(1); // keyword 변경 시 첫 페이지로 리셋
-    fetchPosts(1, appliedFilters, sortOption);
-  }, [keyword, appliedFilters, sortOption, fetchPosts]);
+    fetchPosts(currentPage, appliedFilters, sortOption);
+  }, [currentPage, keyword, appliedFilters, sortOption, fetchPosts]);
 
   // 페이지만 변경될 때
   useEffect(() => {
