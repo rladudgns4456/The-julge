@@ -24,7 +24,6 @@ interface ApplicationData {
 
 export default function ProfileDetailPage() {
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [applications, setApplications] = useState<ApplicationData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +35,6 @@ export default function ProfileDetailPage() {
       router.push("/login");
       return;
     }
-    setUserId(restoredUser.id);
     fetchData(restoredUser.id);
   }, [router]);
 
