@@ -113,7 +113,7 @@ export const NoticeInfo = ({
           </div>
 
           {/* 공고 정보 */}
-          <div className="w-full md:w-[346px] pt-4 flex flex-col justify-between gap-3 grow-0">
+          <div className="w-full md:w-[346px] flex flex-col justify-between gap-3 grow-0">
             {/* 공고 시급 */}
             <div>
               <span className="text-body-1-bold text-primary-20">시급</span>

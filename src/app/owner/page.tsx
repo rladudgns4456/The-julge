@@ -62,9 +62,9 @@ export default function OwnerPage() {
       <ShopInfo shop={shop} />
 
       {/* 공고 섹션 */}
-      <section className="w-full h-full pt-[60] pb-[120px] bg-gray-5">
-        <div className="max-w-[964px] w-full mx-auto">
-          <h2 className="text-h1 mb-6 ">{count > 0 ? "내가 등록한 공고" : "등록한 공고"}</h2>
+      <section className="w-full h-full pt-[60] pb-[120px] bg-gray-5 tablet:px-8 mobile:px-3">
+        <div className="max-w-[964px] w-full mx-auto ">
+          <h2 className="text-h1 mobile:text-h3 mb-6 ">{count > 0 ? "내가 등록한 공고" : "등록한 공고"}</h2>
 
           {noticesError ? (
             <div className="text-red-500 p-4 border border-red-500 rounded">
