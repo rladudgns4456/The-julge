@@ -8,8 +8,10 @@ import { useUserData } from "@/hooks/useUserData";
 import { useNoticeForm } from "@/hooks/useNoticeForm";
 import { useSearchParams } from "next/navigation";
 import { useShopNoticeDetail } from "@/hooks/useShopNoticeDetail";
+import { Suspense } from "react"; // ✅ 추가
 
-export default function NoticeRegisterPage() {
+// ✅ Suspense로 감싼 내부 컴포넌트 분리
+function NoticeRegisterContent() {
   const searchParams = useSearchParams();
 
   // 쿼리 파라미터 mode 확인
@@ -20,7 +22,7 @@ export default function NoticeRegisterPage() {
   const { user } = useAuth();
   const { userData } = useUserData(user?.id);
 
-  const shopId = mode === "new" ? userData?.shop?.item?.id ?? null : shopIdFromQuery;
+  const shopId = mode === "new" ? (userData?.shop?.item?.id ?? null) : shopIdFromQuery;
 
   // 편집 모드일 때 기존 공고 데이터 가져오기
   const {
@@ -171,5 +173,14 @@ export default function NoticeRegisterPage() {
         </div>
       </form>
     </main>
+  );
+}
+
+// ✅ Suspense로 감싼 외부 래퍼
+export default function NoticeRegisterPage() {
+  return (
+    <Suspense fallback={<div className="text-center mt-10">페이지 로딩 중...</div>}>
+      <NoticeRegisterContent />
+    </Suspense>
   );
 }

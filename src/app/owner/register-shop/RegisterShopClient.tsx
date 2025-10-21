@@ -11,7 +11,7 @@ import { getShop } from "@/api/shop/ShopApi";
 import { ShopItem } from "@/types/shop";
 import { CATEGORY_OPTIONS, REGION_OPTIONS } from "@/constants/options";
 
-export default function NoticeRegisterPage() {
+export default function RegisterShopClient() {
   const searchParams = useSearchParams();
 
   // 쿼리 파라미터에서 mode 확인

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -60,6 +61,7 @@ export default function ProfileRegisterPage() {
         <button
           onClick={() => router.push("/profile")}
           className="absolute right-0 top-0 text-h2 text-gray-50 hover:text-black"
+          aria-label="닫기"
         >
           ✕
         </button>
@@ -101,29 +103,28 @@ export default function ProfileRegisterPage() {
             />
           </div>
 
-          {/* 선호 지역 */}
-          <div className="flex flex-col">
-            <label htmlFor="region" className="text-body-1-regular text-black mb-[8px]">
-              선호 지역
-            </label>
-            <select
-              id="region"
-              name="region"
-              value={form.region}
-              onChange={handleChange}
-              className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] bg-white focus:outline-none"
-            >
-              <option value="">선택</option>
-              {REGION_OPTIONS.map(r => (
-                <option key={r.value} value={r.label}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+{/* 선호 지역 */}
+<div className="flex flex-col">
+  <label htmlFor="region" className="text-body-1-regular text-black mb-[8px]">
+    선호 지역
+  </label>
+  <select
+    id="region"
+    name="region"
+    value={form.region}
+    onChange={handleChange}
+    className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] bg-white focus:outline-none"
+  >
+    <option value="">선택</option>
+    {REGION_OPTIONS.map((r) => (
+      <option key={r.value} value={r.label}>
+        {r.label}
+      </option>
+    ))}
+  </select>
+</div>
 
-        {/* 소개 */}
+        {/* 자기소개 */}
         <div>
           <label htmlFor="intro" className="text-body-1-regular text-black mb-[8px] block">
             소개

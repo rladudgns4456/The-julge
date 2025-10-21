@@ -34,7 +34,7 @@ const CommonTable: React.FC<TableProps> = ({ title, data, onApprove, onReject })
 
   return (
     <div className="bg-white rounded-lg shadow-sm">
-      <h2 className="text-xl font-bold text-black p-6 pb-4">{title}</h2>
+      {title ? <h2 className="text-xl font-bold text-black p-6 pb-4">{title}</h2> : null}
 
       <div className="overflow-x-auto">
         <table className="w-full table-fixed">
