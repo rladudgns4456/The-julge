@@ -48,7 +48,7 @@ export default function OwnerPage() {
     return (
       <main className="w-full h-screen max-w-[964px] mx-auto px-8">
         <section className="mt-[60px]">
-          <h1 className="text-h1 mb-6">내 가게</h1>
+          <h1 className="text-h1 mobile:text-h3 mb-6">내 가게</h1>
           <EmptyShop />
         </section>
       </main>
