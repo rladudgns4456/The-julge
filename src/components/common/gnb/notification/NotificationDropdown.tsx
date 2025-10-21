@@ -28,8 +28,8 @@ const NotificationDropDown = ({ onClose }: DropdownProps) => {
         throw new Error("읽은 알림을 처리하는데 실패했습니다.");
       }
     }
-    router.push(notification.notice.href);
 
+    router.push(`/jobs/${notification.shop.item.id}/${notification.notice.item.id}`);
     onClose();
   };
 
