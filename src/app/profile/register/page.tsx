@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-static";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -10,7 +11,12 @@ import { saveProfile } from "@/api/profile/profileApi";
 
 export default function ProfileRegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", phone: "", region: "", intro: "" });
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    region: "",
+    intro: "",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -50,6 +56,7 @@ export default function ProfileRegisterPage() {
         <button
           onClick={() => router.push("/profile")}
           className="absolute right-0 top-0 text-h2 text-gray-50 hover:text-black"
+          aria-label="닫기"
         >
           ✕
         </button>
@@ -59,9 +66,13 @@ export default function ProfileRegisterPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
         {/* 이름 / 연락처 / 선호지역 */}
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-[24px]">
+          {/* 이름 */}
           <div className="flex flex-col">
-            <label className="text-body-1-regular text-black mb-[8px]">이름*</label>
+            <label htmlFor="name" className="text-body-1-regular text-black mb-[8px]">
+              이름*
+            </label>
             <input
+              id="name"
               name="name"
               value={form.name}
               onChange={handleChange}
@@ -70,9 +81,13 @@ export default function ProfileRegisterPage() {
             />
           </div>
 
+          {/* 연락처 */}
           <div className="flex flex-col">
-            <label className="text-body-1-regular text-black mb-[8px]">연락처*</label>
+            <label htmlFor="phone" className="text-body-1-regular text-black mb-[8px]">
+              연락처*
+            </label>
             <input
+              id="phone"
               name="phone"
               value={form.phone}
               onChange={handleChange}
@@ -81,9 +96,15 @@ export default function ProfileRegisterPage() {
             />
           </div>
 
+          {/* 선호 지역 */}
           <div className="flex flex-col">
             <label className="text-body-1-regular text-black mb-[8px]">선호 지역</label>
             <select //속성 이름 없어도 문제없는지? 린트에러가 나고있어서요 - 찬민
+            <label htmlFor="region" className="text-body-1-regular text-black mb-[8px]">
+              선호 지역
+            </label>
+            <select
+              id="region"
               name="region"
               value={form.region}
               onChange={handleChange}
@@ -91,7 +112,7 @@ export default function ProfileRegisterPage() {
             >
               <option value="">선택</option>
               {REGION_OPTIONS.map(r => (
-                <option key={r.value} value={r.label}>
+                <option key={r.value} value={r.value}>
                   {r.label}
                 </option>
               ))}
@@ -99,10 +120,13 @@ export default function ProfileRegisterPage() {
           </div>
         </div>
 
-        {/* 소개 */}
+        {/* 자기소개 */}
         <div>
-          <label className="text-body-1-regular text-black mb-[8px] block">소개</label>
+          <label htmlFor="intro" className="text-body-1-regular text-black mb-[8px] block">
+            소개
+          </label>
           <textarea
+            id="intro"
             name="intro"
             value={form.intro}
             onChange={handleChange}
@@ -111,7 +135,7 @@ export default function ProfileRegisterPage() {
           />
         </div>
 
-        {/* 버튼 */}
+        {/* 등록 버튼 */}
         <div className="text-center">
           <Button type="submit" variant="primary" size="large" className="w-[240px] h-[47px] mx-auto">
             등록하기

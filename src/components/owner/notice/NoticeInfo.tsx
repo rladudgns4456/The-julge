@@ -109,13 +109,7 @@ export const NoticeInfo = ({
         <div className="flex w-full bg-white p-6 gap-[30px] rounded-xl flex-col md:flex-row">
           {/* 가게 이미지 */}
           <div className="relative w-full md:w-[539px] h-[309px]">
-            <Image
-              src={shop.item.imageUrl}
-              alt={shop.item.name}
-              fill
-              className="object-cover rounded-xl"
-              priority
-            />
+            <Image src={shop.item.imageUrl} alt={shop.item.name} fill className="object-cover rounded-xl" priority />
           </div>
 
           {/* 공고 정보 */}
@@ -141,9 +135,7 @@ export const NoticeInfo = ({
                 alt="시간 아이콘"
                 style={{ width: "20px", height: "20px" }}
               />
-              <span className="text-gray-50 text-body-1-regular">
-                {formatDateTime(startsAt, workhour)}
-              </span>
+              <span className="text-gray-50 text-body-1-regular">{formatDateTime(startsAt, workhour)}</span>
             </div>
             {/* 주소 */}
             <div className="text-body-1-regular">
@@ -188,9 +180,7 @@ export const NoticeInfo = ({
                   >
                     {isApplying ? "신청 중..." : buttonProps.text}
                   </Button>
-                  {applicationError && (
-                    <p className="text-caption text-red-40 mt-2 text-center">{applicationError}</p>
-                  )}
+                  {applicationError && <p className="text-caption text-red-40 mt-2 text-center">{applicationError}</p>}
                 </div>
               )}
             </div>
