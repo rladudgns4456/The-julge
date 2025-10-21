@@ -1,23 +1,30 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* 기본 설정 */
   images: {
     remotePatterns: [
       {
-        // TODO: API 연동시 이미지URL 와일드 카드 변경
+        // TODO: API 연동 시 이미지 URL 와일드카드 수정 필요
         protocol: "https",
         hostname: "**",
       },
     ],
   },
+
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
 
-  // ✅ 추가: 빌드 중 ESLint 무시 (Vercel 빌드 오류 방지)
   eslint: {
+    // ✅ 빌드 중 ESLint 오류 무시 (Vercel 빌드 실패 방지)
     ignoreDuringBuilds: true,
+  },
+
+  // ✅ 변경된 방식: experimental.turbo → turbo
+  turbo: {
+    // Turbopack 완전 비활성화
+    enabled: false,
   },
 };
 

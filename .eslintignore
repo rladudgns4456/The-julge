@@ -1,0 +1,4 @@
+# ESLint 검사 제외 파일
+postcss.config.js
+tailwind.config.js
+next-env.d.ts
