@@ -10,25 +10,35 @@ import { saveProfile } from "@/api/profile/profileApi";
 
 export default function ProfileRegisterPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", phone: "", region: "", intro: "" });
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    region: "",
+    intro: "",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
+  // ✅ 로그인 확인 및 유저 ID 세팅
   useEffect(() => {
     const user = AuthLoginApi.getCurrentUser() ?? AuthLoginApi.restoreUserFromStorage();
+
     if (!user?.id) {
       alert("로그인이 필요합니다.");
       router.push("/login");
       return;
     }
+
     setUserId(user.id);
   }, [router]);
 
+  // ✅ 입력값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
+  // ✅ 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userId) return alert("로그인 정보가 없습니다.");
@@ -57,33 +67,47 @@ export default function ProfileRegisterPage() {
 
       {/* 폼 */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-[32px]">
-        {/* 이름 / 연락처 / 선호지역 */}
+        {/* 이름 / 연락처 / 선호 지역 */}
         <div className="grid grid-cols-1 tablet:grid-cols-3 gap-[24px]">
+          {/* 이름 */}
           <div className="flex flex-col">
-            <label className="text-body-1-regular text-black mb-[8px]">이름*</label>
+            <label htmlFor="name" className="text-body-1-regular text-black mb-[8px]">
+              이름*
+            </label>
             <input
+              id="name"
               name="name"
               value={form.name}
               onChange={handleChange}
               placeholder="입력"
               className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
+              required
             />
           </div>
 
+          {/* 연락처 */}
           <div className="flex flex-col">
-            <label className="text-body-1-regular text-black mb-[8px]">연락처*</label>
+            <label htmlFor="phone" className="text-body-1-regular text-black mb-[8px]">
+              연락처*
+            </label>
             <input
+              id="phone"
               name="phone"
               value={form.phone}
               onChange={handleChange}
               placeholder="입력"
               className="border border-gray-20 rounded-[6px] px-[16px] h-[52px] focus:outline-none"
+              required
             />
           </div>
 
+          {/* 선호 지역 */}
           <div className="flex flex-col">
-            <label className="text-body-1-regular text-black mb-[8px]">선호 지역</label>
-            <select //속성 이름 없어도 문제없는지? 린트에러가 나고있어서요 - 찬민
+            <label htmlFor="region" className="text-body-1-regular text-black mb-[8px]">
+              선호 지역
+            </label>
+            <select
+              id="region"
               name="region"
               value={form.region}
               onChange={handleChange}
@@ -101,8 +125,11 @@ export default function ProfileRegisterPage() {
 
         {/* 소개 */}
         <div>
-          <label className="text-body-1-regular text-black mb-[8px] block">소개</label>
+          <label htmlFor="intro" className="text-body-1-regular text-black mb-[8px] block">
+            소개
+          </label>
           <textarea
+            id="intro"
             name="intro"
             value={form.intro}
             onChange={handleChange}
@@ -111,7 +138,7 @@ export default function ProfileRegisterPage() {
           />
         </div>
 
-        {/* 버튼 */}
+        {/* 등록 버튼 */}
         <div className="text-center">
           <Button type="submit" variant="primary" size="large" className="w-[240px] h-[47px] mx-auto">
             등록하기
