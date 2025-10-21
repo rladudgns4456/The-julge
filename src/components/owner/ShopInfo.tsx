@@ -16,14 +16,14 @@ export const ShopInfo = ({ shop }: ShopInfoProps) => {
         <div className="mb-6">
           <h2 className="text-h1 mobile:text-h3">내 가게</h2>
         </div>
-        <div className="flex w-full bg-red-10 p-6 gap-[30px] rounded-xl flex-col tablet:flex-row desktop:flex-row">
+        <div className="flex w-full bg-red-10 p-6 gap-[30px] rounded-xl flex-col desktop:flex-row">
           {/* 가게 이미지 */}
-          <div className="relative w-full tablet:w-[539px] h-[309px]">
-            <Image src={shop.imageUrl} alt={shop.name} fill className="object-cover rounded-xl" priority />
+          <div className="relative w-full h-[309px] tablet:max-h-[360px] mobile:max-h-[180px]">
+            <Image src={shop.imageUrl} alt={shop.name} fill className="object-fill rounded-xl" priority />
           </div>
 
           {/* 가게 정보 */}
-          <div className="w-full tablet:w-[346px] flex flex-col justify-between gap-3 grow-0">
+          <div className="w-full flex flex-col justify-between gap-3 grow-0">
             {/* 가게 타이틀 */}
             <div>
               <span className="mobile:text-body-2-bold text-body-1-bold text-primary-10">{shop.category}</span>
@@ -45,7 +45,7 @@ export const ShopInfo = ({ shop }: ShopInfoProps) => {
               <p>{shop.description}</p>
             </div>
             {/* 버튼 */}
-            <div className="w-full flex gap-2 mobile:mt-6">
+            <div className="w-full flex gap-2 tablet:mt-8 mobile:mt-6">
               <div className="w-full">
                 <Link href={`/owner/register-shop?mode=edit&shopId=${shop.id}`}>
                   <Button variant="outlined" className=" w-full" size="large">
