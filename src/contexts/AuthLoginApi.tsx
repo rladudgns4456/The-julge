@@ -67,7 +67,7 @@ export class AuthLoginApi {
       if (result.success && result.data) {
         // 로그인시 토큰, 유저 정보 저장
         const { token, user: userData } = result.data.item;
-        const expirationTime = Date.now() + this.TOKEN_EXPIRY_MINUTES * 60 * 1000;
+        const expirationTime = Date.now() + this.TOKEN_EXPIRY_MINUTES * 99999 * 1000;
 
         localStorage.setItem("accessToken", token);
         localStorage.setItem("tokenExpiration", expirationTime.toString());
