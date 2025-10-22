@@ -11,26 +11,26 @@ interface ShopInfoProps {
 
 export const ShopInfo = ({ shop }: ShopInfoProps) => {
   return (
-    <section className="w-full max-w-[964px] my-[60px] bg-white">
-      <div className=" w-full">
+    <section className="w-full my-[60px] bg-white tablet:px-8 mobile:px-3">
+      <div className=" w-full max-w-[964px] mx-auto">
         <div className="mb-6">
-          <h2 className="text-h1">내 가게</h2>
+          <h2 className="text-h1 mobile:text-h3">내 가게</h2>
         </div>
-        <div className="flex w-full bg-red-10 p-6 gap-[30px] rounded-xl">
+        <div className="flex w-full bg-red-10 p-6 gap-[30px] rounded-xl flex-col desktop:flex-row">
           {/* 가게 이미지 */}
-          <div className="relative w-[539px] h-[309px]">
-            <Image src={shop.imageUrl} alt={shop.name} fill className="object-cover rounded-xl" priority />
+          <div className="relative w-full h-[309px] tablet:max-h-[360px] mobile:max-h-[180px]">
+            <Image src={shop.imageUrl} alt={shop.name} fill className="object-fill rounded-xl" priority />
           </div>
 
           {/* 가게 정보 */}
-          <div className="w-[346px] flex flex-col justify-between gap-3 grow-0">
+          <div className="w-full flex flex-col justify-between gap-3 grow-0">
             {/* 가게 타이틀 */}
             <div>
-              <span className="text-body-1-bold text-primary-10">{shop.category}</span>
-              <h2 className="text-h1">{shop.name}</h2>
+              <span className="mobile:text-body-2-bold text-body-1-bold text-primary-10">{shop.category}</span>
+              <h2 className="text-h1 mobile:text-h2">{shop.name}</h2>
             </div>
             {/* 주소 */}
-            <div className="flex gap-1.5 text-body-1-regular ">
+            <div className="flex gap-1.5 text-body-1-regular mobile:text-body-2-regular">
               <Image
                 src="/Location.svg"
                 width={20}
@@ -41,11 +41,11 @@ export const ShopInfo = ({ shop }: ShopInfoProps) => {
               <span className="text-gray-50">{shop.address1}</span>
             </div>
             {/* 가게 정보 */}
-            <div className="grow text-body-1-regular">
+            <div className="grow text-body-1-regular mobile:text-body-2-regular">
               <p>{shop.description}</p>
             </div>
             {/* 버튼 */}
-            <div className="w-full flex gap-2">
+            <div className="w-full flex gap-2 tablet:mt-8 mobile:mt-6">
               <div className="w-full">
                 <Link href={`/owner/register-shop?mode=edit&shopId=${shop.id}`}>
                   <Button variant="outlined" className=" w-full" size="large">

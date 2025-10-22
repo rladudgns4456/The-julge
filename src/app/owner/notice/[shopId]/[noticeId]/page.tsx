@@ -43,7 +43,7 @@ export default function NoticeDetailPage() {
   return (
     <main className="w-full h-full bg-gray-5 flex flex-col items-center">
       {/* 공고 상세 정보 */}
-      <section className="max-w-[964px] w-full py-[60px]">
+      <section className="max-w-[964px] w-full py-[60px] tablet:px-8 mobile:px-3">
         <div className="mb-6">
           <span className="text-primary-20 text-body-1-bold mb-2 block">{noticeDetail.shop.item.category}</span>
           <h1 className="text-h1">{noticeDetail.shop.item.name}</h1>
@@ -51,7 +51,7 @@ export default function NoticeDetailPage() {
         <NoticeInfo noticeDetail={noticeDetail} userRole="employer" />
       </section>
       {/* 신청자 목록 */}
-      <section className="max-w-[964px] w-full py-[60px]">
+      <section className="max-w-[964px] w-full py-[60px] tablet:px-8 mobile:px-3">
         <h2 className="text-h1 mb-8">신청자 목록</h2>
         {shopId && noticeId ? (
           <ApplicationList shopId={shopId} noticeId={noticeId} />

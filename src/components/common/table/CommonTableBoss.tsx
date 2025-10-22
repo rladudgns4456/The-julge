@@ -33,16 +33,20 @@ const CommonTable: React.FC<TableProps> = ({ title, data, onApprove, onReject })
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm">
+    <div className="max-w-[964px] bg-white rounded-lg shadow-sm">
       {title ? <h2 className="text-xl font-bold text-black p-6 pb-4">{title}</h2> : null}
 
-      <div className="overflow-x-auto">
+      <div className="w-full overflow-x-auto">
         <table className="w-full table-fixed">
-          <thead>
+          <thead className="">
             <tr className="bg-red-10">
               <th className="w-[228px] px-6 py-4 text-center text-sm font-semibold text-black rounded-tl-lg">신청자</th>
-              <th className="w-[300px] px-6 py-4 text-center text-sm font-semibold text-black">소개</th>
-              <th className="w-[200px] px-6 py-4 text-center text-sm font-semibold text-black">전화번호</th>
+              <th className="hidden desktop:table-cell w-[300px] px-6 py-4 text-center text-sm font-semibold text-black">
+                소개
+              </th>
+              <th className="mobile:hidden desktop:table-cell w-[170px] desktop:w-[200px] px-5 desktop:px-6 py-4 text-center text-sm font-semibold text-black">
+                전화번호
+              </th>
               <th className="w-[236px] px-6 py-4 text-center text-sm font-semibold text-black rounded-tr-lg">상태</th>
             </tr>
           </thead>
@@ -56,10 +60,12 @@ const CommonTable: React.FC<TableProps> = ({ title, data, onApprove, onReject })
                 style={{ height: "70px" }}
               >
                 <td className="px-6 py-4 text-sm font-medium text-black text-center">{applicant.name}</td>
-                <td className="px-6 py-4 text-sm text-black text-center">
+                <td className="hidden desktop:table-cell px-6 py-4 text-sm text-black text-cente">
                   <div className="line-clamp-2">{applicant.introduction}</div>
                 </td>
-                <td className="px-6 py-4 text-sm text-black text-center">{applicant.phoneNumber}</td>
+                <td className="mobile:hidden desktop:table-cell px-5 desktop:px-6 py-4 text-sm text-black text-center">
+                  {applicant.phoneNumber}
+                </td>
                 <td className="px-6 py-4 text-sm text-center flex justify-center items-center">
                   {getStatusElement(applicant)}
                 </td>
